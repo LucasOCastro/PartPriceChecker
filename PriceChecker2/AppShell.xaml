@@ -7,9 +7,27 @@
     Shell.FlyoutBehavior="Disabled"
     Title="PriceChecker2">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Main">
+            <ShellContent
+                Title="Home"
+                ContentTemplate="{DataTemplate local:MainPage}"
+                Route="MainPage" />
+        </Tab>
+        <Tab Title="Tracker">
+            <ShellContent 
+                Title="Tracker"
+                ContentTemplate="{DataTemplate local:PartTrackerPage}"
+                />
+        </Tab>
+        <Tab Title="New">
+            <ShellContent
+                Title="TEST"
+                ContentTemplate="{DataTemplate local:PartAddPage}"
+                />
+        </Tab>
+    </TabBar>
+
+    
 
 </Shell>
