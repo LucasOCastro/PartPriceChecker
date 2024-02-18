@@ -14,7 +14,7 @@
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal">
                             <Entry Placeholder="URL" HorizontalOptions="FillAndExpand" BindingContext="{Binding .}" Text="{Binding Value, Mode=TwoWay}"/>
-                            <Button Text="-" Pressed="RemoveItem_Pressed" CommandParameter="{Binding Value}"/>
+                            <Button Text="-" Pressed="RemoveItem_Pressed" CommandParameter="{Binding}"/>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
