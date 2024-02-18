@@ -6,18 +6,20 @@
     <VerticalStackLayout>
         <Entry x:Name="_partNameEntry" Placeholder="Name"/>
 
-        <VerticalStackLayout Margin="20,0,0,0">
+        <Label FontSize="Title" HorizontalOptions="Center">URLs</Label>
+        <VerticalStackLayout Margin="10,20,10,20">
+            
             <CollectionView x:Name="_entryColView">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <HorizontalStackLayout>
-                            <Entry Placeholder="URL" BindingContext="{Binding .}" Text="{Binding Value, Mode=TwoWay}"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Entry Placeholder="URL" HorizontalOptions="FillAndExpand" BindingContext="{Binding .}" Text="{Binding Value, Mode=TwoWay}"/>
                             <Button Text="-" Pressed="RemoveItem_Pressed" CommandParameter="{Binding Value}"/>
-                        </HorizontalStackLayout>
+                        </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Text="+" Pressed="AddUrl_Pressed"/>
+            <Button Text="+" HorizontalOptions="Center" Pressed="AddUrl_Pressed"/>
         </VerticalStackLayout>
 
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
