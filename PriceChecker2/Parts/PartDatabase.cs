@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 
-namespace PriceChecker2;
+namespace PriceChecker2.Parts;
 
 public class PartDatabase : Singleton<PartDatabase>
 {
@@ -37,7 +37,7 @@ public class PartDatabase : Singleton<PartDatabase>
         await File.WriteAllTextAsync(Dir, JsonSerializer.Serialize(_parts));
         _busy = false;
     }
-    
+
     public async Task RegisterAsync(Part part)
     {
         _parts.Add(part);

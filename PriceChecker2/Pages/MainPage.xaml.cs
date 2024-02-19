@@ -1,5 +1,4 @@
-﻿using PriceChecker2.UrlScraping;
-using System.Collections.ObjectModel;
+﻿using PriceChecker2.Parts;
 
 namespace PriceChecker2;
 

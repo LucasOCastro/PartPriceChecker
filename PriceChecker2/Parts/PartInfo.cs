@@ -1,16 +1,8 @@
 ﻿using PriceChecker2.UrlScraping;
 
-namespace PriceChecker2;
+namespace PriceChecker2.Parts;
 
-public class Part
-{
-    public string Name { get; set; } = "New Part";
-    public string[] Urls { get; set; } = Array.Empty<string>();
-
-    public override string ToString() => Name;
-}
-
-public class PartInfo 
+public class PartInfo
 {
     public string Name { get; }
 
@@ -21,7 +13,7 @@ public class PartInfo
     public double? LowestPrice => _cheapestData?.Price;
     public string LowestPriceStoreIconUri => _cheapestData?.WebsiteIconUri ?? "";
     public string PriceString => IsValid ? string.Format("{0:C}", LowestPrice) : "INVALID";
-    
+
     private readonly List<UrlScrapedData> _data = new();
     public PartInfo(Part part)
     {
@@ -36,7 +28,7 @@ public class PartInfo
         {
             var data = await UrlScraper.Instance.ScrapeAsync(new Uri(urls[i]));
             if (data == null) continue;
-            
+
             _data.Add(data);
             if (_cheapestData == null || data.Price < LowestPrice)
                 _cheapestData = data;

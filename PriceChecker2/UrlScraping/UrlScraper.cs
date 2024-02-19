@@ -2,12 +2,6 @@
 
 namespace PriceChecker2.UrlScraping;
 
-public class UrlScrapedData
-{
-    public string WebsiteIconUri { get; set; } = "";
-    public double Price { get; set; } = -1;
-}
-
 public class UrlScraper : Singleton<UrlScraper>
 {
     private readonly HttpClient _client = new();

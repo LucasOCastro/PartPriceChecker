@@ -76,10 +76,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="PartAddPage.xaml">
+	  <MauiXaml Update="Pages\PartAddPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="PartTrackerPage.xaml">
+	  <MauiXaml Update="Pages\PartTrackerPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
