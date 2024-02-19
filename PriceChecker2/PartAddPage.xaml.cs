@@ -4,7 +4,7 @@ namespace PriceChecker2;
 
 public partial class PartAddPage : ContentPage
 {
-	private class URL : ObservableModelView
+	private class URL : ObservableViewModel
     {
 		private string _value = "";
 		public string Value 
