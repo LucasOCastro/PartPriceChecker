@@ -49,4 +49,10 @@ public class PartDatabase : Singleton<PartDatabase>
         _parts.Remove(part);
         await SaveChangesAsync();
     }
+
+    public async Task ClearAsync()
+    {
+        _parts.Clear();
+        await SaveChangesAsync();
+    }
 }

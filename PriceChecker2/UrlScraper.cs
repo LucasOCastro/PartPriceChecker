@@ -5,7 +5,7 @@ namespace PriceChecker2.UrlScraping;
 public class UrlScrapedData
 {
     public string WebsiteIconUri { get; set; } = "";
-    public string PriceString { get; set; } = "";
+    public double Price { get; set; } = -1;
 }
 
 public class UrlScraper : Singleton<UrlScraper>
@@ -33,7 +33,6 @@ public class UrlScraper : Singleton<UrlScraper>
     {
         string html = await _client.GetStringAsync(url);
         
-
         HtmlDocument doc = new();
         doc.LoadHtml(html);
         string iconUri = doc.DocumentNode.SelectSingleNode("/html/head/link[@rel='shortcut icon' and @href]").Attributes["href"].Value;
@@ -44,13 +43,13 @@ public class UrlScraper : Singleton<UrlScraper>
 
         string priceString = priceNode.InnerText
             .Replace("r$", "", StringComparison.OrdinalIgnoreCase)
-            .Replace(" ", "")
-            .Replace(',', '.');
+            .Replace(" ", "");
+        double price = double.Parse(priceString.Trim());
 
         return new()
         {
             WebsiteIconUri = iconUri,
-            PriceString = priceString
+            Price = price
         };
     }
 

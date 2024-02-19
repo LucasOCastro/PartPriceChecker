@@ -43,7 +43,7 @@ public partial class PartAddPage : ContentPage
 			Urls = _urls.Select(u => u.Value).ToArray()
 		};
 		//TODO some loading window until finishes saving
-		PartDatabase.Instance.RegisterAsync(part);
+		Task.Run(() => PartDatabase.Instance.RegisterAsync(part));
 		_partNameEntry.Text = "";
 		_urls.Clear();
 	}

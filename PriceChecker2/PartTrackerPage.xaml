@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="PriceChecker2.PartTrackerPage"
              Title="Part Tracker">
     <VerticalStackLayout>
+        <Button Text="CLEAR ALL" Pressed="ClearButton_Pressed" IsEnabled="{Binding IsBusy, Converter={toolkit:InvertedBoolConverter}}"/>
+        <!--<ActivityIndicator IsRunning="{Binding IsBusy}"/>-->
         <CollectionView x:Name="_partsCollectionView" Margin="0,10,0,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="Azure">
-                        <VerticalStackLayout>
-                            <Label FontSize="Large" Text="{Binding Name}"/>
-                            <HorizontalStackLayout>
-                                <Label FontSize="Medium" Text="{Binding PriceString}"/>
-                                <Image MaximumWidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <VerticalStackLayout HorizontalOptions="StartAndExpand">
+                                <Label FontSize="Large" Text="{Binding Name}"/>
+                                <HorizontalStackLayout>
+                                    <Label FontSize="Medium" Text="{Binding PriceString}"/>
+                                    <Image MaximumWidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                            <CheckBox IsChecked="{Binding IsBuildPart}" VerticalOptions="Center"/>
+                            <Label Text="Build" FontSize="Medium" VerticalOptions="Center"/>
+                        </StackLayout>
+                        
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
