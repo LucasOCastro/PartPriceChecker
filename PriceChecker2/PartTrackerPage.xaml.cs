@@ -8,16 +8,12 @@ public partial class PartTrackerPage : ContentPage
 
     private async Task LoadPartInfoAsync(IEnumerable<Part> parts)
     {
-        IsBusy = true;
-
         var scraped = parts.Select(p => new PartInfo(p)).ToList();
         while (scraped.Any(p => p.Loading))
             await Task.Delay(50);
 
         foreach (var s in scraped)
             _scrapedParts.Add(s);
-
-        IsBusy = false;
     }
 
     public PartTrackerPage()
@@ -25,11 +21,11 @@ public partial class PartTrackerPage : ContentPage
         BindingContext = this;
 		InitializeComponent();
         _partsCollectionView.ItemsSource = _scrapedParts;
-        Task.Run(() => LoadPartInfoAsync(PartDatabase.Instance.Parts));
-    }
 
-    private void ClearButton_Pressed(object sender, EventArgs e)
-    {
-        Task.Run(() =>PartDatabase.Instance.ClearAsync());
+        IsBusy = true;
+        Task.Run(async() => {
+            await LoadPartInfoAsync(PartDatabase.Instance.Parts);
+            IsBusy = false;
+        });
     }
 }

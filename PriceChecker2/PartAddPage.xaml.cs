@@ -27,6 +27,12 @@ public partial class PartAddPage : ContentPage
 		BindingContext = this;
 	}
 
+	private void ClearInputs()
+	{
+        _partNameEntry.Text = "";
+        _urls.Clear();
+    }
+
     private void AddUrl_Pressed(object sender, EventArgs e) => _urls.Add("");
 
     private void RemoveItem_Pressed(object sender, EventArgs e)
@@ -42,9 +48,12 @@ public partial class PartAddPage : ContentPage
 			Name = _partNameEntry.Text,
 			Urls = _urls.Select(u => u.Value).ToArray()
 		};
-		//TODO some loading window until finishes saving
-		Task.Run(() => PartDatabase.Instance.RegisterAsync(part));
-		_partNameEntry.Text = "";
-		_urls.Clear();
+		IsBusy = true;
+		Task.Run(async () => { 
+			await PartDatabase.Instance.RegisterAsync(part);
+			IsBusy = false;
+		});
+
+		ClearInputs();
 	}
 }
