@@ -7,19 +7,7 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <CollectionView x:Name="_partsCollectionView">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <VerticalStackLayout Background="Azure" Padding="5,5,5,5">
-                            <Label FontSize="Header" Text="{Binding Name}"/>
-                            <HorizontalStackLayout>
-                                <Label FontSize="Body" Text="{Binding PriceString}"/>
-                                <Image MaximumWidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+
         </VerticalStackLayout>
     </ScrollView>
 
