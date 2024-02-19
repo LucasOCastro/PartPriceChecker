@@ -44,7 +44,6 @@ public partial class PartAddPage : ContentPage
 		};
 		//TODO some loading window until finishes saving
 		PartDatabase.Instance.RegisterAsync(part);
-
 		_partNameEntry.Text = "";
 		_urls.Clear();
 	}
