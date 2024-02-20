@@ -9,6 +9,21 @@
             Padding="30,0"
             Spacing="25">
             <Button Text="CLEAR ALL" Pressed="ClearButton_Pressed" IsEnabled="{Binding IsBusy, Converter={toolkit:InvertedBoolConverter}}"/>
+            <CollectionView x:Name="_partsCollectionView" Margin="10,10,10,10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="Azure" Margin="0,5,0,5" IsVisible="{Binding IsBuildPart}">
+                            <VerticalStackLayout HorizontalOptions="StartAndExpand">
+                                <Label FontSize="Large" Text="{Binding Name}"/>
+                                <HorizontalStackLayout>
+                                    <Label FontSize="Medium" Text="{Binding PriceString}"/>
+                                    <Image MaximumWidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 
