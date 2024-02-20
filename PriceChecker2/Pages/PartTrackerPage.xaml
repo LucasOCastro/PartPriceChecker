@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PriceChecker2.PartTrackerPage"
+    x:Class="PriceChecker2.PartTrackerPage"
              Title="Part Tracker">
     <VerticalStackLayout>
         <Button Text="TEST"/>
@@ -9,7 +9,7 @@
         <CollectionView x:Name="_partsCollectionView" Margin="10,10,10,10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="Azure" Margin="0, 5,0,5">
+                    <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="Azure" Margin="0,5,0,5">
                         <StackLayout Orientation="Horizontal">
                             <VerticalStackLayout HorizontalOptions="StartAndExpand">
                                 <Label FontSize="Large" Text="{Binding Name}"/>
