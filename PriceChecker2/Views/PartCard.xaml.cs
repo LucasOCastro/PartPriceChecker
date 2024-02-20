@@ -24,5 +24,6 @@ public partial class PartCard : ContentView
 	}
 
 	private void Frame_Tapped(object? sender, TappedEventArgs args)
-		=> Shell.Current.GoToAsync("//editor", new Dictionary<string, object?> { { nameof(PartEditingPage.Part), Part?.Part } });
+		//=> Shell.Current.GoToAsync("//editor", new Dictionary<string, object?> { { nameof(PartEditingPage.Part), Part?.Part } });
+		=> ShellNavigator.Instance.NavigateAsync("//editor", new Dictionary<string, object?> { { nameof(PartEditingPage.Part), Part?.Part } });
 }

@@ -35,7 +35,7 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
 	}
 	private void DeleteButton_Pressed(object sender, EventArgs e) => DeleteAsync();
 
-	private void Return() => Shell.Current.GoToAsync("//main");
+	private void Return() => ShellNavigator.Instance.BackAsync();//Shell.Current.GoToAsync("//main");
 	private void BackButton_Pressed(object? sender, EventArgs e) => Return();
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
