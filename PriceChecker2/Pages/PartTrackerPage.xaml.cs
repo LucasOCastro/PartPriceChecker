@@ -7,7 +7,6 @@ public partial class PartTrackerPage : ContentPage
     public PartTrackerPage()
 	{
 		InitializeComponent();
-        BindingContext = this;
         LoadPartInfoAsync();
     }
     
