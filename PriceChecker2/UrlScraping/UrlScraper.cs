@@ -67,6 +67,7 @@ public class UrlScraper : Singleton<UrlScraper>
 
         return new()
         {
+            Url = url.ToString(),
             WebsiteIconUri = iconUri,
             Price = price
         };

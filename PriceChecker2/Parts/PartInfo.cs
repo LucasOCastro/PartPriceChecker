@@ -18,6 +18,8 @@ public class PartInfo : ObservableViewModel
         }
     }
 
+    public IEnumerable<UrlScrapedData> AllUrlData => _data;
+
     public bool Loading { get; private set; }
 
     public bool IsValid => _cheapestData != null;
@@ -25,7 +27,7 @@ public class PartInfo : ObservableViewModel
     private UrlScrapedData? _cheapestData;
     public double? LowestPrice => _cheapestData?.Price;
     public string LowestPriceStoreIconUri => _cheapestData?.WebsiteIconUri ?? "";
-    public string PriceString => IsValid ? string.Format("{0:C}", LowestPrice) : "INVALID";
+    public string PriceString => IsValid ? _cheapestData.PriceString : "INVALID";
 
     private readonly List<UrlScrapedData> _data = new();
     public PartInfo(Part part)

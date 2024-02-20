@@ -28,7 +28,7 @@ internal class ShellNavigator : Singleton<ShellNavigator>
         _current = Shell.Current.CurrentState.Location.ToString();
     }
 
-    public async Task NavigateAsync(string path, Dictionary<string, object>? parameters = null)
+    public async Task NavigateAsync(string path, Dictionary<string, object?>? parameters = null)
     {
         PushCurrent();
         await GoToAsync(path, parameters);
