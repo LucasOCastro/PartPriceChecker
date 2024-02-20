@@ -1,8 +1,9 @@
 ﻿using PriceChecker2.UrlScraping;
+using System.ComponentModel;
 
 namespace PriceChecker2.Parts;
 
-public class PartInfo
+public class PartInfo : ObservableViewModel
 {
     private readonly Part _part;
     public string Name => _part.Name;
@@ -13,6 +14,7 @@ public class PartInfo
         {
             if (value == _part.IsBuildPart) return;
             _part.IsBuildPart = value;
+            //OnPropertyChanged(nameof(IsBuildPart));
             Task.Run(PartDatabase.Instance.SaveChangesAsync);
         }
     }
@@ -39,7 +41,8 @@ public class PartInfo
     {
         for (int i = 0; i < urls.Length; i++)
         {
-            var data = await UrlScraper.Instance.ScrapeAsync(new Uri(urls[i]));
+            if (!Uri.TryCreate(urls[i], UriKind.Absolute, out var uri)) continue;
+            var data = await UrlScraper.Instance.ScrapeAsync(uri);
             if (data == null) continue;
 
             _data.Add(data);
