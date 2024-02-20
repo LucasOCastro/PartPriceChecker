@@ -9,6 +9,6 @@
         <views:PartEditor x:Name="_partEditor"/>
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
         <Button Text="Cancel" Pressed="BackButton_Pressed"/>
-        <Button Text="Delete" Pressed="DeleteButton_Pressed" BackgroundColor="Red"/>
+        
     </VerticalStackLayout>
 </ContentPage>

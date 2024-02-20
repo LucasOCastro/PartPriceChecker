@@ -7,7 +7,6 @@
              x:Class="PriceChecker2.Pages.PartTrackerPage"
              Title="Part Tracker">
     <VerticalStackLayout>
-        <Button Text="TEST"/>
         <CollectionView x:Name="_partsCollectionView" Margin="10,10,10,10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>

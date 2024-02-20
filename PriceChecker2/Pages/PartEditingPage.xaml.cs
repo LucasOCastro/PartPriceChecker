@@ -25,16 +25,6 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
 		SaveAsync();
 	}
 
-
-	private async Task DeleteAsync()
-	{
-		IsBusy = true;
-		await PartDatabase.Instance.UnregisterAsync(Part);
-		IsBusy = false;
-		Return();
-	}
-	private void DeleteButton_Pressed(object sender, EventArgs e) => DeleteAsync();
-
 	private void Return() => ShellNavigator.Instance.BackAsync();//Shell.Current.GoToAsync("//main");
 	private void BackButton_Pressed(object? sender, EventArgs e) => Return();
 

@@ -1,5 +1,4 @@
 using PriceChecker2.Parts;
-using System.Windows.Input;
 
 namespace PriceChecker2.Pages;
 
@@ -38,4 +37,16 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
         if (args.Parameter is not string url || !Uri.IsWellFormedUriString(url, UriKind.Absolute)) return;
         Launcher.OpenAsync(url);
     }
+
+    private async Task DeleteAsync()
+    {
+        bool accept = await DisplayAlert("Are you sure?", "This will delete the part permanently.", "Accept", "Cancel");
+        if (!accept) return;
+
+        IsBusy = true;
+        await PartDatabase.Instance.UnregisterAsync(Part.Part);
+        IsBusy = false;
+        await ShellNavigator.Instance.BackAsync();
+    }
+    private void DeleteButton_Pressed(object sender, EventArgs e) => DeleteAsync();
 }

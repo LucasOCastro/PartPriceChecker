@@ -10,7 +10,8 @@
     <VerticalStackLayout Padding="10, 0, 10, 0">
         <Button Text="Back" HorizontalOptions="Start" Pressed="BackButton_Pressed" Margin="0,0,0,5"/>
         <views:PartCard Part="{Binding .}" LinkToViewerOnPress="False" Margin="10,5,10,5"/>
-        <Button Text="Edit" Pressed="EditButton_Pressed"/>
+        <Button Text="Edit" Pressed="EditButton_Pressed" Margin="0,0,0,10"/>
+        <Button Text="Delete" Pressed="DeleteButton_Pressed" BackgroundColor="Red"/>
         <CollectionView ItemsSource="{Binding AllUrlData}" Margin="0, 10, 0, 0">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="scraping:UrlScrapedData">
