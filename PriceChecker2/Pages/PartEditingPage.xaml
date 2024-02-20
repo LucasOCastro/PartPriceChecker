@@ -2,10 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:PriceChecker2.Views"
-             x:Class="PriceChecker2.PartAddPage"
-             Title="Track new part">
+             x:Class="PriceChecker2.Pages.PartEditingPage"
+             Title="PartEditingPage">
     <VerticalStackLayout>
         <views:PartEditor x:Name="_partEditor"/>
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
+        <Button Text="Delete" Pressed="DeleteButton_Pressed" BackgroundColor="Red"/>
     </VerticalStackLayout>
 </ContentPage>
