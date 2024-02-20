@@ -6,6 +6,10 @@ namespace PriceChecker2.Parts;
 
 public class PartDatabase : Singleton<PartDatabase>
 {
+    public delegate void DatabaseChangeDelegate(PartInfo part);
+    public event DatabaseChangeDelegate? OnPartRegistered;
+    public event DatabaseChangeDelegate? OnPartUnregistered;
+
     private const string FileName = "parts.json";
     private static readonly string Dir = Path.Combine(FileSystem.Current.AppDataDirectory, FileName);
 
@@ -42,22 +46,34 @@ public class PartDatabase : Singleton<PartDatabase>
     public async Task RegisterAsync(Part part)
     {
         _parts.Add(part);
-        _partInfos.Add(new(part));
         await SaveChangesAsync();
+
+        PartInfo partInfo = new(part);
+        await AsyncUtils.WaitWhile(() => partInfo.Loading);
+        _partInfos.Add(partInfo);
+
+        OnPartRegistered?.Invoke(partInfo);
     }
 
     public async Task UnregisterAsync(Part part)
     {
         int index = _parts.IndexOf(part);
         _parts.RemoveAt(index);
-        _partInfos.RemoveAt(index);
         await SaveChangesAsync();
+
+        PartInfo partInfo = _partInfos[index];
+        _partInfos.RemoveAt(index);
+        
+        OnPartUnregistered?.Invoke(partInfo);
     }
 
     public async Task ClearAsync()
     {
         _parts.Clear();
-        _partInfos.Clear();
         await SaveChangesAsync();
+
+        foreach (var partInfo in _partInfos)
+            OnPartUnregistered?.Invoke(partInfo);
+        _partInfos.Clear();
     }
 }
