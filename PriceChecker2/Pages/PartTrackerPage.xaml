@@ -4,7 +4,7 @@
              xmlns:views="clr-namespace:PriceChecker2.Views"
              xmlns:parts="clr-namespace:PriceChecker2.Parts"
              x:DataType="parts:PartInfo"
-             x:Class="PriceChecker2.PartTrackerPage"
+             x:Class="PriceChecker2.Pages.PartTrackerPage"
              Title="Part Tracker">
     <VerticalStackLayout>
         <Button Text="TEST"/>

@@ -3,31 +3,34 @@
     x:Class="PriceChecker2.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:PriceChecker2"
+    xmlns:local="clr-namespace:PriceChecker2.Pages"
     Shell.FlyoutBehavior="Disabled"
     Title="PriceChecker2">
-
     <TabBar>
-        <Tab Title="Main">
+        <Tab Title="Main" Route="main">
             <ShellContent
                 Title="Home"
                 ContentTemplate="{DataTemplate local:MainPage}"
                 Route="MainPage" />
         </Tab>
-        <Tab Title="Tracker">
+        <Tab Title="Tracker" Route="tracker">
             <ShellContent 
                 Title="Tracker"
                 ContentTemplate="{DataTemplate local:PartTrackerPage}"
                 />
         </Tab>
-        <Tab Title="New">
+        <Tab Title="New" Route="register">
             <ShellContent
-                Title="TEST"
+                Title="New"
                 ContentTemplate="{DataTemplate local:PartAddPage}"
                 />
         </Tab>
     </TabBar>
-
+    <ShellContent
+        Title="Ablueblue"
+        Route="editor"
+        ContentTemplate="{DataTemplate local:PartEditingPage}"
+        />
     
 
 </Shell>

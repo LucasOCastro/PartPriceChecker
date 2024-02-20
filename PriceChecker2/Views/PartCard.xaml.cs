@@ -1,3 +1,4 @@
+using PriceChecker2.Pages;
 using PriceChecker2.Parts;
 
 namespace PriceChecker2.Views;
@@ -21,4 +22,7 @@ public partial class PartCard : ContentView
 	{
 		InitializeComponent();
 	}
+
+	private void Frame_Tapped(object? sender, TappedEventArgs args)
+		=> Shell.Current.GoToAsync("//editor", new Dictionary<string, object?> { { nameof(PartEditingPage.Part), Part?.Part } });
 }

@@ -1,6 +1,6 @@
 using PriceChecker2.Parts;
 
-namespace PriceChecker2;
+namespace PriceChecker2.Pages;
 
 public partial class PartAddPage : ContentPage
 {

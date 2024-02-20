@@ -1,9 +1,8 @@
 ﻿using PriceChecker2.Parts;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace PriceChecker2;
+namespace PriceChecker2.Pages;
 
 public partial class MainPage : ContentPage
 {

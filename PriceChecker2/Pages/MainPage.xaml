@@ -6,18 +6,17 @@
              xmlns:parts="clr-namespace:PriceChecker2.Parts"
              x:DataType="parts:PartInfo"
              x:Name="self"
-             x:Class="PriceChecker2.MainPage">
+             x:Class="PriceChecker2.Pages.MainPage">
 
-    <VerticalStackLayout
+    <StackLayout Orientation="Vertical"
         Padding="30,0"
         Spacing="25">
-        <Button Text="TEST!"/>
-        <CollectionView x:Name="_collectionView" Margin="0,10,0,10">
+        <CollectionView x:Name="_collectionView" Margin="0,10,0,10" VerticalOptions="FillAndExpand">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <views:PartCard Part="{Binding .}" Margin="0,5,0,5"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </StackLayout>
 </ContentPage>

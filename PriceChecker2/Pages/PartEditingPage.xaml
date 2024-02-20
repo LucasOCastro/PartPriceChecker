@@ -4,9 +4,11 @@
              xmlns:views="clr-namespace:PriceChecker2.Views"
              x:Class="PriceChecker2.Pages.PartEditingPage"
              Title="PartEditingPage">
-    <VerticalStackLayout>
+    <VerticalStackLayout Spacing="10">
+        
         <views:PartEditor x:Name="_partEditor"/>
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
+        <Button Text="Cancel" Pressed="BackButton_Pressed"/>
         <Button Text="Delete" Pressed="DeleteButton_Pressed" BackgroundColor="Red"/>
     </VerticalStackLayout>
 </ContentPage>
