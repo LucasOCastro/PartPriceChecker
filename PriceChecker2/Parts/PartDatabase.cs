@@ -24,7 +24,7 @@ public class PartDatabase : Singleton<PartDatabase>
         Parts = new(_parts);
     }
 
-    private async Task SaveChangesAsync()
+    public async Task SaveChangesAsync()
     {
         if (_busy)
             await new Task(async () =>

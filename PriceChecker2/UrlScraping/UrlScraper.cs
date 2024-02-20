@@ -47,7 +47,7 @@ public class UrlScraper : Singleton<UrlScraper>
         
         HtmlDocument doc = new();
         doc.LoadHtml(html);
-        string iconUri = doc.DocumentNode.SelectSingleNode("/html/head/link[@rel='shortcut icon' and @href]").Attributes["href"].Value;
+        string iconUri = "http://www.google.com/s2/favicons?domain=" + url.Host;
 
 
         var priceNode = GetPriceNode(doc.DocumentNode.Descendants(), GetDomainName(url));

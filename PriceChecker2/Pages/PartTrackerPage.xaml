@@ -4,10 +4,12 @@
              x:Class="PriceChecker2.PartTrackerPage"
              Title="Part Tracker">
     <VerticalStackLayout>
+        <Button Text="TEST"/>
+        <!--<ActivityIndicator IsVisible="{Binding IsBusy}"/>-->
         <CollectionView x:Name="_partsCollectionView" Margin="10,10,10,10">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="Azure">
+                    <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="Azure" Margin="0, 5,0,5">
                         <StackLayout Orientation="Horizontal">
                             <VerticalStackLayout HorizontalOptions="StartAndExpand">
                                 <Label FontSize="Large" Text="{Binding Name}"/>
@@ -19,7 +21,6 @@
                             <CheckBox IsChecked="{Binding IsBuildPart}" VerticalOptions="Center"/>
                             <Label Text="Build" FontSize="Medium" VerticalOptions="Center"/>
                         </StackLayout>
-                        
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

@@ -4,9 +4,21 @@ namespace PriceChecker2.Parts;
 
 public class PartInfo
 {
-    public string Name { get; }
+    private readonly Part _part;
+    public string Name => _part.Name;
+    public bool IsBuildPart
+    {
+        get => _part.IsBuildPart;
+        set
+        {
+            if (value == _part.IsBuildPart) return;
+            _part.IsBuildPart = value;
+            Task.Run(PartDatabase.Instance.SaveChangesAsync);
+        }
+    }
 
     public bool Loading { get; private set; }
+
     public bool IsValid => _cheapestData != null;
 
     private UrlScrapedData? _cheapestData;
@@ -17,7 +29,8 @@ public class PartInfo
     private readonly List<UrlScrapedData> _data = new();
     public PartInfo(Part part)
     {
-        Name = part.Name;
+        _part = part;
+
         Loading = true;
         Task.Run(() => LoadDataAsync(part.Urls));
     }

@@ -20,7 +20,7 @@ public partial class PartAddPage : ContentPage
 		public static implicit operator URL(string url) => new() { Value = url };
 	}
 
-	private readonly ObservableCollection<URL> _urls = new();
+	private readonly ObservableCollection<URL> _urls = new() { "" };
 	public PartAddPage()
 	{
 		InitializeComponent();
@@ -42,6 +42,14 @@ public partial class PartAddPage : ContentPage
 			_urls.Remove(url);
     }
 
+	private async Task SaveAsync(Part part)
+	{
+        IsBusy = true;
+        await PartDatabase.Instance.RegisterAsync(part);
+        IsBusy = false;
+		ClearInputs();
+    }
+
     private void SaveButton_Pressed(object sender, EventArgs e)
 	{
 		Part part = new()
@@ -49,12 +57,6 @@ public partial class PartAddPage : ContentPage
 			Name = _partNameEntry.Text,
 			Urls = _urls.Select(u => u.Value).ToArray()
 		};
-		IsBusy = true;
-		Task.Run(async () => { 
-			await PartDatabase.Instance.RegisterAsync(part);
-			IsBusy = false;
-		});
-
-		ClearInputs();
+        SaveAsync(part);
 	}
 }

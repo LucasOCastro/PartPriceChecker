@@ -10,12 +10,16 @@ public partial class MainPage : ContentPage
         InitializeComponent();
     }
 
-    private void ClearButton_Pressed(object sender, EventArgs e)
+
+    private async Task ClearAsync()
     {
         IsBusy = true;
-        Task.Run(async () => {
-            await PartDatabase.Instance.ClearAsync();
-            IsBusy = false;
-        });
+        await PartDatabase.Instance.ClearAsync();
+        IsBusy = false;
+    }
+    
+    private void ClearButton_Pressed(object sender, EventArgs e)
+    {
+        ClearAsync();
     }
 }
