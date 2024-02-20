@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:PriceChecker2.Views"
              x:Class="PriceChecker2.PartAddPage"
              Title="Track new part">
     <VerticalStackLayout>
-        <Entry x:Name="_partNameEntry" Placeholder="Name"/>
-
-        <Label FontSize="Title" HorizontalOptions="Center">URLs</Label>
-        <VerticalStackLayout Margin="10,20,10,20">
-            
-            <CollectionView x:Name="_entryColView">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Orientation="Horizontal">
-                            <Entry Placeholder="URL" HorizontalOptions="FillAndExpand" BindingContext="{Binding .}" Text="{Binding Value, Mode=TwoWay}"/>
-                            <Button Text="-" Pressed="RemoveItem_Pressed" CommandParameter="{Binding}"/>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <Button Text="+" HorizontalOptions="Center" Pressed="AddUrl_Pressed"/>
-        </VerticalStackLayout>
+        <views:PartEditor x:Name="_partEditor"/>
 
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
 

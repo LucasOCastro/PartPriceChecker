@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriceChecker2.Views.PartEditor"
+             x:Name="self">
+    <VerticalStackLayout BindingContext="{x:Reference self}">
+        <Entry x:Name="_partNameEntry" Placeholder="Name" Text="{Binding Name}"/>
+
+        <Label FontSize="Title" HorizontalOptions="Center">URLs</Label>
+        <VerticalStackLayout Margin="10,20,10,20">
+            <CollectionView x:Name="_entryColView" ItemsSource="{Binding Urls}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Entry Placeholder="URL" HorizontalOptions="FillAndExpand" BindingContext="{Binding .}" Text="{Binding Value}"/>
+                            <Button Text="-" Pressed="RemoveItem_Pressed" CommandParameter="{Binding}"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="+" HorizontalOptions="Center" Pressed="AddUrl_Pressed"/>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

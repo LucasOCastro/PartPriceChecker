@@ -1,20 +1,19 @@
 ﻿using PriceChecker2.UrlScraping;
-using System.ComponentModel;
 
 namespace PriceChecker2.Parts;
 
 public class PartInfo : ObservableViewModel
 {
-    private readonly Part _part;
-    public string Name => _part.Name;
+    public Part Part { get; }
+    public string Name => Part.Name;
     public bool IsBuildPart
     {
-        get => _part.IsBuildPart;
+        get => Part.IsBuildPart;
         set
         {
-            if (value == _part.IsBuildPart) return;
-            _part.IsBuildPart = value;
-            //OnPropertyChanged(nameof(IsBuildPart));
+            if (value == Part.IsBuildPart) return;
+            Part.IsBuildPart = value;
+            OnPropertyChanged(nameof(IsBuildPart));
             Task.Run(PartDatabase.Instance.SaveChangesAsync);
         }
     }
@@ -31,7 +30,7 @@ public class PartInfo : ObservableViewModel
     private readonly List<UrlScrapedData> _data = new();
     public PartInfo(Part part)
     {
-        _part = part;
+        Part = part;
 
         Loading = true;
         Task.Run(() => LoadDataAsync(part.Urls));
