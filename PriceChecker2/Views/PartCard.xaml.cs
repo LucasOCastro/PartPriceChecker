@@ -12,18 +12,29 @@ public partial class PartCard : ContentView
 		{
 			SetValue(PartProperty, value);
 			BindingContext = Part;
-		}
+        }
 	}
-
 	public static readonly BindableProperty PartProperty =
 		BindableProperty.Create(nameof(Part), typeof(PartInfo), typeof(PartCard));
 
-	public PartCard()
+    public bool LinkToViewerOnPress
+	{
+		get => (bool)GetValue(LinkToViewerOnPressProperty);
+		set => SetValue(LinkToViewerOnPressProperty, value);
+
+	}
+	public static readonly BindableProperty LinkToViewerOnPressProperty =
+		BindableProperty.Create(nameof(LinkToViewerOnPress), typeof(bool), typeof(PartCard), defaultValue: true);
+
+
+    public PartCard()
 	{
 		InitializeComponent();
 	}
 
 	private void Frame_Tapped(object? sender, TappedEventArgs args)
-		//=> Shell.Current.GoToAsync("//editor", new Dictionary<string, object?> { { nameof(PartEditingPage.Part), Part?.Part } });
-		=> ShellNavigator.Instance.NavigateAsync("//editor", new Dictionary<string, object?> { { nameof(PartEditingPage.Part), Part?.Part } });
+	{
+		if (!LinkToViewerOnPress) return;
+		ShellNavigator.Instance.NavigateAsync("//viewer", new Dictionary<string, object?> { { nameof(PartViewingPage.Part), Part } });
+	}
 }

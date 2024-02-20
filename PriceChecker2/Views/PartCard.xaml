@@ -14,7 +14,7 @@
                 <Label FontSize="Large" Text="{Binding Name}"/>
                 <HorizontalStackLayout>
                     <Label FontSize="Medium" Text="{Binding PriceString}"/>
-                    <Image MaximumWidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
+                    <Image x:Name="icon" MaximumWidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
             <CheckBox IsChecked="{Binding IsBuildPart, Mode=TwoWay}" VerticalOptions="Center"/>

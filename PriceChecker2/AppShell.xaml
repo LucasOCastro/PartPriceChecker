@@ -26,8 +26,15 @@
                 />
         </Tab>
     </TabBar>
+
     <ShellContent
-        Title="Ablueblue"
+        Title="Viewer"
+        Route="viewer"
+        ContentTemplate="{DataTemplate local:PartViewingPage}"
+    />
+    
+    <ShellContent
+        Title="Editor"
         Route="editor"
         ContentTemplate="{DataTemplate local:PartEditingPage}"
         />

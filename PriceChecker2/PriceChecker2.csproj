@@ -85,6 +85,9 @@
 	  <MauiXaml Update="Pages\PartTrackerPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\PartViewingPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\PartCard.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
