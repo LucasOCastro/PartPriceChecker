@@ -41,6 +41,13 @@ public class UrlScraper : Singleton<UrlScraper>
         return price.Replace(',', '.');
     }
 
+    private bool IsIconNode(HtmlNode node)
+    {
+        if (node.Name != "link" || !node.Attributes.Contains("rel")) return false;
+        string rel = node.Attributes["rel"].Value;
+        return rel == "icon" || rel == "shortcut icon";
+    }
+
     public async Task<UrlScrapedData?> ScrapeAsync(Uri url)
     {
         if (!url.IsWellFormedOriginalString()) return null;
@@ -49,7 +56,7 @@ public class UrlScraper : Singleton<UrlScraper>
         
         HtmlDocument doc = new();
         doc.LoadHtml(html);
-        string iconUri = "http://www.google.com/s2/favicons?domain=" + url.Host;
+        string iconUri = doc.DocumentNode.Descendants().FirstOrDefault(IsIconNode)?.Attributes["href"]?.Value ?? "";// "http://www.google.com/s2/favicons?domain=" + url.Host;
 
 
         var priceNode = GetPriceNode(doc.DocumentNode.Descendants(), GetDomainName(url));
