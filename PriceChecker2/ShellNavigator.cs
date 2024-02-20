@@ -5,6 +5,16 @@ internal class ShellNavigator : Singleton<ShellNavigator>
     private readonly List<string> _stack = new();
     private string _current = "";
 
+    private readonly Dictionary<string, Dictionary<string, object>?> _paramsDict = new();
+
+    private async static Task GoToAsync(string path, Dictionary<string, object>? parameters)
+    {
+        if (parameters == null)
+            await Shell.Current.GoToAsync(path);
+        else
+            await Shell.Current.GoToAsync(path, parameters);
+    }
+
     private void PushCurrent()
     {
         int foundIndex = _stack.IndexOf(_current);
@@ -21,10 +31,8 @@ internal class ShellNavigator : Singleton<ShellNavigator>
     public async Task NavigateAsync(string path, Dictionary<string, object>? parameters = null)
     {
         PushCurrent();
-        if (parameters == null)
-            await Shell.Current.GoToAsync(path);
-        else
-            await Shell.Current.GoToAsync(path, parameters);
+        await GoToAsync(path, parameters);
+        _paramsDict.SetOrAdd(path, parameters);
     }
 
     public async Task BackAsync()
@@ -35,6 +43,8 @@ internal class ShellNavigator : Singleton<ShellNavigator>
         string target = _stack[lastIndex];
         _stack.RemoveAt(lastIndex);
 
-        await Shell.Current.GoToAsync(target);
+        _paramsDict.TryGetValue(target, out var parameters);
+        await GoToAsync(target, parameters);
+        _paramsDict.TrySet(target, null);
     }
 }
