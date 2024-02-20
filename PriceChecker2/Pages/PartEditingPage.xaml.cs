@@ -40,9 +40,11 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-		if (query[nameof(Part)] is not Part part) return;
-		Part = part;
+        if (!query.TryGetValue(nameof(Part), out var obj) || obj is not Part part) return;
+
+        Part = part;
         _partEditor.Name = part.Name;
+		_partEditor.Urls.Clear();
         foreach (var url in part.Urls)
             _partEditor.Urls.Add(url);
     }
