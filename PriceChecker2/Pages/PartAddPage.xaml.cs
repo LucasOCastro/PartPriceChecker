@@ -54,8 +54,8 @@ public partial class PartAddPage : ContentPage
 	{
 		Part part = new()
 		{
-			Name = _partNameEntry.Text,
-			Urls = _urls.Select(u => u.Value).ToArray()
+			Name = _partNameEntry.Text.Trim(),
+			Urls = _urls.Select(u => u.Value.Trim()).Where(u => Uri.IsWellFormedUriString(u, UriKind.Absolute)).ToArray()
 		};
         SaveAsync(part);
 	}

@@ -43,6 +43,8 @@ public class UrlScraper : Singleton<UrlScraper>
 
     public async Task<UrlScrapedData?> ScrapeAsync(Uri url)
     {
+        if (!url.IsWellFormedOriginalString()) return null;
+
         string html = await _client.GetStringAsync(url);
         
         HtmlDocument doc = new();
