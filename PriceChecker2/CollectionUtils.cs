@@ -49,11 +49,11 @@ public static class CollectionUtils
                 min = mid + 1;
             else return mid;
         }
-        return ~min;
+        return min;
     }
 
     public static void InsertOrderedBy<T, TKey>(this IList<T> list, T obj, Func<T, TKey> keySelector) where TKey : IComparable
-        => list.InsertOrdered(obj, (a, b) => keySelector(a).CompareTo(b));
+        => list.InsertOrdered(obj, (a, b) => keySelector(a).CompareTo(keySelector(b)));
     public static void InsertOrdered<T>(this IList<T> list, T obj, Comparison<T> comparison)
         => list.InsertOrdered(obj, Comparer<T>.Create(comparison));
     public static void InsertOrdered<T>(this IList<T> list, T obj, IComparer<T> comparer)
