@@ -38,19 +38,30 @@ public class PartInfo : ObservableViewModel
         Task.Run(() => LoadDataAsync(part.Urls));
     }
 
-    private async Task LoadDataAsync(string[] urls)
-    {
-        for (int i = 0; i < urls.Length; i++)
-        {
-            if (!Uri.TryCreate(urls[i], UriKind.Absolute, out var uri)) continue;
-            var data = await UrlScraper.Instance.ScrapeAsync(uri);
-            if (data == null) continue;
+    private void UpdateCheapestData() => _cheapestData = AllUrlData.MinBy(data => data.Price);
 
-            _data.Add(data);
-            if (_cheapestData == null || data.Price < LowestPrice)
-                _cheapestData = data;
+    private async Task LoadDataAsync(IEnumerable<string> urls)
+    {
+        foreach (var url in urls)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) continue;
+            var data = await UrlScraper.Instance.ScrapeAsync(uri);
+            if (data != null) _data.Add(data);
         }
+        UpdateCheapestData();
         Loading = false;
+    }
+
+    public async Task ChangePartData(string newName, IEnumerable<string> newUrls)
+    {
+        Part.Name = newName;
+        Part.Urls = newUrls.ToArray();
+        await PartDatabase.Instance.SaveChangesAsync();
+
+        //Removes all the data from _data that do not exist in newUrls
+        _data.RemoveAll(data => !newUrls.Contains(data.Url));
+        //Loads all the newUrls that werent in _data before
+        await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
     }
 
     public override string ToString() => Name;
