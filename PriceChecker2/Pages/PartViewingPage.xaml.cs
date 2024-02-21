@@ -1,4 +1,6 @@
 using PriceChecker2.Parts;
+using PriceChecker2.UrlScraping;
+using System.Collections.ObjectModel;
 
 namespace PriceChecker2.Pages;
 
@@ -11,10 +13,14 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
         {
             SetValue(PartProperty, value);
             BindingContext = Part;
+
+            _urlCollectionView.ItemsSource = SortedUrls;
         }
     }
     public readonly static BindableProperty PartProperty =
         BindableProperty.Create(nameof(Part), typeof(PartInfo), typeof(PartViewingPage));
+
+    private IEnumerable<UrlScrapedData> SortedUrls => Part.AllUrlData.OrderBy(p => p.Price);
 
     public PartViewingPage()
     {

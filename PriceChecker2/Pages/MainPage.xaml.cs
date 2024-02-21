@@ -34,21 +34,23 @@ public partial class MainPage : ContentPage
         IsBusy = false;
     }
 
-    private void OnPartUnregistered(PartInfo part)
-    {
-        if (part.IsBuildPart) _buildParts.Remove(part);
-    }
-
     private void OnPartRegistered(PartInfo part)
     {
         if (part.IsBuildPart) _buildParts.Add(part);
+        part.PropertyChanged += OnPartPropertyChanged;
+    }
+
+    private void OnPartUnregistered(PartInfo part)
+    {
+        if (part.IsBuildPart) _buildParts.Remove(part);
+        part.PropertyChanged -= OnPartPropertyChanged;
     }
 
     private void OnPartPropertyChanged(object? sender, EventArgs e)
     {
         if (sender is not PartInfo part) return;
         if (e is not PropertyChangedEventArgs { PropertyName: nameof(PartInfo.IsBuildPart)}) return;
-        
+
         if (part.IsBuildPart) _buildParts.Add(part);
         else _buildParts.Remove(part);
     }
