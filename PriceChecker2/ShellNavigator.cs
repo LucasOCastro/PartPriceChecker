@@ -44,7 +44,7 @@ internal class ShellNavigator : Singleton<ShellNavigator>
         _stack.RemoveAt(lastIndex);
 
         _paramsDict.TryGetValue(target, out var parameters);
+        _paramsDict.TrySet(_current, null);
         await GoToAsync(target, parameters);
-        _paramsDict.TrySet(target, null);
     }
 }
