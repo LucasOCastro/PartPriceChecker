@@ -25,7 +25,7 @@ public class PartInfo : ObservableViewModel
     public bool IsValid => _cheapestData != null;
 
     private UrlScrapedData? _cheapestData;
-    public double? LowestPrice => _cheapestData?.Price;
+    public double LowestPrice => _cheapestData?.Price ?? 0;
     public string LowestPriceStoreIconUri => _cheapestData?.WebsiteIconUri ?? "";
     public string PriceString => IsValid ? _cheapestData.PriceString : "INVALID";
 
@@ -62,6 +62,13 @@ public class PartInfo : ObservableViewModel
         _data.RemoveAll(data => !newUrls.Contains(data.Url));
         //Loads all the newUrls that werent in _data before
         await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
+    }
+
+    private bool _affordable;
+    public bool Affordable 
+    {
+        get => _affordable;
+        set => SetValue(ref _affordable, value);
     }
 
     public override string ToString() => Name;

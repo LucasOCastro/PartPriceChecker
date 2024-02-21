@@ -26,7 +26,6 @@ public partial class PartCard : ContentView
 	public static readonly BindableProperty LinkToViewerOnPressProperty =
 		BindableProperty.Create(nameof(LinkToViewerOnPress), typeof(bool), typeof(PartCard), defaultValue: true);
 
-
     public PartCard()
 	{
 		InitializeComponent();

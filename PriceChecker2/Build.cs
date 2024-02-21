@@ -9,7 +9,7 @@ public class Build: ObservableViewModel
     private readonly ObservableCollection<PartInfo> _buildParts;
     public ReadOnlyObservableCollection<PartInfo> BuildParts { get; }
 
-    public double TotalValidPrice => BuildParts.Where(bp => bp.IsValid).Sum(bp => bp.LowestPrice ?? 0);
+    public double TotalValidPrice => BuildParts.Where(bp => bp.IsValid).Sum(bp => bp.LowestPrice);
 
     public Build()
     {
