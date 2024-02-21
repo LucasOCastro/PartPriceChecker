@@ -9,7 +9,6 @@
              x:Class="PriceChecker2.Pages.MainPage">
 
     <StackLayout Orientation="Vertical" x:DataType="pages:MainPage" BindingContext="{x:Reference self}"
-        Padding="30,0"
         Spacing="25">
         
         <Entry HorizontalOptions="Center" Keyboard="Numeric" Placeholder="Money!" Text="{Binding MoneyString}"/>
@@ -25,11 +24,18 @@
                 </FormattedString>
             </Label.FormattedText>
         </Label>
-        <CollectionView x:Name="_collectionView" Margin="0,10,0,10" VerticalOptions="FillAndExpand" 
+        <CollectionView x:Name="_collectionView" Margin="5,10,5,10" VerticalOptions="FillAndExpand" 
                         ItemsSource="{Binding Build.BuildParts}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="parts:PartInfo">
-                    <views:PartCard Part="{Binding .}" Margin="0,5,0,5"/>
+                    <StackLayout Orientation="Horizontal">
+                        <views:PartCard Part="{Binding .}" Margin="0,5,0,5" HorizontalOptions="FillAndExpand"/>
+                        <VerticalStackLayout Margin="2,0,2,0" WidthRequest="40" VerticalOptions="Center">
+                            <Button Text="^" Pressed="UpButton_Pressed" CommandParameter="{Binding .}"/>
+                            <Button Text="v" Pressed="DownButton_Pressed" CommandParameter="{Binding .}"/>
+                        </VerticalStackLayout>
+                    </StackLayout>
+                    
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

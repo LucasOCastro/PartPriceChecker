@@ -87,4 +87,18 @@ public partial class MainPage : ContentPage
             if (money < 0) money = 0;
         }
     }
+
+    private void UpButton_Pressed(object sender, EventArgs args)
+    {
+        if (sender is not Button button || button.CommandParameter is not PartInfo part) return;
+        if (part.BuildPriority == 0) return;
+        Build.SwapBuildPriorities(part.BuildPriority, part.BuildPriority - 1);
+    }
+
+    private void DownButton_Pressed(object sender, EventArgs args)
+    {
+        if (sender is not Button button || button.CommandParameter is not PartInfo part) return;
+        if (part.BuildPriority == Build.BuildParts.Count - 1) return;
+        Build.SwapBuildPriorities(part.BuildPriority, part.BuildPriority + 1);
+    }
 }

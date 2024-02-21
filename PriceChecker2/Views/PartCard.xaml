@@ -5,7 +5,7 @@
              x:Name="self"
              
              x:Class="PriceChecker2.Views.PartCard">
-    <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True" Background="ForestGreen">
+    <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True">
         <Frame.Triggers>
             <DataTrigger TargetType="Frame" x:DataType="parts:PartInfo" Binding="{Binding Affordable}" Value="False">
                 <Setter Property="BackgroundColor" Value="Red"/>
