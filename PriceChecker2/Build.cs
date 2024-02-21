@@ -9,6 +9,34 @@ public class Build: ObservableViewModel
     private readonly ObservableCollection<PartInfo> _buildParts;
     public ReadOnlyObservableCollection<PartInfo> BuildParts { get; }
 
+    private void Add(PartInfo part)
+    {
+        if (part.BuildPriority >= 0)
+        {
+            _buildParts.InsertOrderedBy(part, bp => bp.BuildPriority);
+            bool test = _buildParts.DistinctBy(bp => bp.BuildPriority).Count() == _buildParts.Count;
+        }
+        else
+        {
+            part.BuildPriority = _buildParts.Count;
+            _buildParts.Add(part);
+        }
+    }
+
+    private void Remove(PartInfo part)
+    {
+        part.BuildPriority = -1;
+        _buildParts.Remove(part);
+    }
+
+    public void SwapBuildPriorities(int a, int b)
+    {
+        if (a == b) return;
+        _buildParts[a].BuildPriority = b;
+        _buildParts[b].BuildPriority = a;
+        _buildParts.Swap(a, b);
+    }
+
     public double TotalValidPrice => BuildParts.Where(bp => bp.IsValid).Sum(bp => bp.LowestPrice);
 
     public Build()
@@ -32,13 +60,13 @@ public class Build: ObservableViewModel
 
     private void OnPartRegistered(PartInfo part)
     {
-        if (part.IsBuildPart) _buildParts.Add(part);
+        if (part.IsBuildPart) Add(part);
         part.PropertyChanged += OnPartPropertyChanged;
     }
 
     private void OnPartUnregistered(PartInfo part)
     {
-        if (part.IsBuildPart) _buildParts.Remove(part);
+        if (part.IsBuildPart) Remove(part);
         part.PropertyChanged -= OnPartPropertyChanged;
     }
 
@@ -47,7 +75,7 @@ public class Build: ObservableViewModel
         if (sender is not PartInfo part) return;
         if (e is not PropertyChangedEventArgs { PropertyName: nameof(PartInfo.IsBuildPart) }) return;
 
-        if (part.IsBuildPart) _buildParts.Add(part);
-        else _buildParts.Remove(part);
+        if (part.IsBuildPart) Add(part);
+        else Remove(part);
     }
 }

@@ -18,6 +18,18 @@ public class PartInfo : ObservableViewModel
         }
     }
 
+    public int BuildPriority
+    {
+        get => Part.BuildPriority;
+        set
+        {
+            if (value == Part.BuildPriority) return;
+            Part.BuildPriority = value;
+            OnPropertyChanged(nameof(BuildPriority));
+            Task.Run(PartDatabase.Instance.SaveChangesAsync);
+        }
+    }
+
     public IEnumerable<UrlScrapedData> AllUrlData => _data;
 
     public bool Loading { get; private set; }
@@ -38,8 +50,6 @@ public class PartInfo : ObservableViewModel
         Task.Run(() => LoadDataAsync(part.Urls));
     }
 
-    private void UpdateCheapestData() => _cheapestData = AllUrlData.MinBy(data => data.Price);
-
     private async Task LoadDataAsync(IEnumerable<string> urls)
     {
         foreach (var url in urls)
@@ -48,7 +58,7 @@ public class PartInfo : ObservableViewModel
             var data = await UrlScraper.Instance.ScrapeAsync(uri);
             if (data != null) _data.Add(data);
         }
-        UpdateCheapestData();
+        _cheapestData = AllUrlData.MinBy(data => data.Price);
         Loading = false;
     }
 
@@ -60,7 +70,7 @@ public class PartInfo : ObservableViewModel
 
         //Removes all the data from _data that do not exist in newUrls
         _data.RemoveAll(data => !newUrls.Contains(data.Url));
-        //Loads all the newUrls that werent in _data before
+        //Loads all the newUrls that werent in _data before (updates the cheapest inside)
         await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
     }
 
