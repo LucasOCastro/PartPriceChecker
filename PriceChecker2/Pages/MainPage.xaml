@@ -11,7 +11,7 @@
     <StackLayout Orientation="Vertical" x:DataType="pages:MainPage" BindingContext="{x:Reference self}"
         Spacing="25">
         
-        <Entry HorizontalOptions="Center" Keyboard="Numeric" Placeholder="Money!" Text="{Binding MoneyString}"/>
+        <Entry HorizontalOptions="Center" Keyboard="Numeric" Placeholder="Money!" Text="{Binding MoneyString}" Completed="MoneyEntry_Completed"/>
         <Label FontSize="Large" HorizontalOptions="Center">
             <Label.FormattedText>
                 <FormattedString>

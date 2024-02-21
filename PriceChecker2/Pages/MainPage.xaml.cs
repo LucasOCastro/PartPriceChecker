@@ -1,4 +1,5 @@
 ﻿using PriceChecker2.Parts;
+using PriceChecker2.Saving;
 
 namespace PriceChecker2.Pages;
 
@@ -26,7 +27,7 @@ public partial class MainPage : ContentPage
         return double.TryParse(moneyString, out money);
     }
 
-    private string _percentageString;
+    private string _percentageString = "0%";
     public string PercentageString
     {
         get => _percentageString;
@@ -37,11 +38,10 @@ public partial class MainPage : ContentPage
         }
     }
 
-
-
     public MainPage()
     {
         InitializeComponent();
+        MoneyString = string.Format("{0:}", Saver.Instance.State.Money);
         LoadPartInfoAsync();
         Build.PropertyChanged += (s, e) => {
             if (e.PropertyName == nameof(Build.TotalValidPrice))
@@ -54,6 +54,7 @@ public partial class MainPage : ContentPage
         IsBusy = true;
         await AsyncUtils.WaitUntil(() => PartDatabase.Instance.AllLoaded);
         CalculateAffordables();
+        UpdatePercentage();
         IsBusy = false;
     }
 
@@ -100,5 +101,14 @@ public partial class MainPage : ContentPage
         if (sender is not Button button || button.CommandParameter is not PartInfo part) return;
         if (part.BuildPriority == Build.BuildParts.Count - 1) return;
         Build.SwapBuildPriorities(part.BuildPriority, part.BuildPriority + 1);
+    }
+
+    private void MoneyEntry_Completed(object sender, EventArgs args)
+    {
+        if (TryGetMoneyValue(out double money))
+        {
+            Saver.Instance.State.Money = money;
+            Task.Run(Saver.Instance.SaveAsync);
+        }
     }
 }
