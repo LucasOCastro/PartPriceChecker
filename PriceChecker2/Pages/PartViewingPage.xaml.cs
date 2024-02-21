@@ -1,6 +1,5 @@
 using PriceChecker2.Parts;
 using PriceChecker2.UrlScraping;
-using System.Collections.ObjectModel;
 
 namespace PriceChecker2.Pages;
 
@@ -28,14 +27,13 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
     }
 
     private void EditButton_Pressed(object sender, EventArgs e)
-        => ShellNavigator.Instance.NavigateAsync("//editor", new() { { nameof(PartEditingPage.Part), Part?.Part } });
+        => ShellNavigator.Instance.NavigateAsync("//editor", new() { { nameof(PartEditingPage.Part), Part } });
 
     private void BackButton_Pressed(object sender, EventArgs e) => ShellNavigator.Instance.BackAsync();
-
-    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    protected override bool OnBackButtonPressed()
     {
-        if (!query.TryGetValue(nameof(Part), out var obj) || obj is not PartInfo part) return;
-        Part = part;
+        ShellNavigator.Instance.BackAsync();
+        return true;
     }
 
     private void Link_Tapped(object sender, TappedEventArgs args)
@@ -55,4 +53,10 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
         await ShellNavigator.Instance.BackAsync();
     }
     private void DeleteButton_Pressed(object sender, EventArgs e) => DeleteAsync();
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (!query.TryGetValue(nameof(Part), out var obj) || obj is not PartInfo part) return;
+        Part = part;
+    }
 }

@@ -4,7 +4,7 @@ namespace PriceChecker2.Pages;
 
 public partial class PartEditingPage : ContentPage, IQueryAttributable
 {
-	public Part? Part { get; private set; }
+	public PartInfo? Part { get; private set; }
 
 	public PartEditingPage()
 	{
@@ -14,28 +14,29 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
 	private async void SaveAsync()
 	{
 		IsBusy = true;
-		await PartDatabase.Instance.SaveChangesAsync();
+		await Part.ChangePartData(_partEditor.Name, _partEditor.ValidatedUrls);
 		IsBusy = false;
 		Return();
 	}
-	private void SaveButton_Pressed(object sender, EventArgs e)
-	{
-		Part.Name = _partEditor.Name;
-        Part.Urls = _partEditor.ValidatedUrls.ToArray();
-		SaveAsync();
-	}
+	private void SaveButton_Pressed(object sender, EventArgs e) => SaveAsync();
 
-	private void Return() => ShellNavigator.Instance.BackAsync();//Shell.Current.GoToAsync("//main");
+
+    private void Return() => ShellNavigator.Instance.BackAsync();
 	private void BackButton_Pressed(object? sender, EventArgs e) => Return();
+    protected override bool OnBackButtonPressed()
+    {
+        Return();
+        return true;
+    }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (!query.TryGetValue(nameof(Part), out var obj) || obj is not Part part) return;
+        if (!query.TryGetValue(nameof(Part), out var obj) || obj is not PartInfo part) return;
 
         Part = part;
         _partEditor.Name = part.Name;
 		_partEditor.Urls.Clear();
-        foreach (var url in part.Urls)
+        foreach (var url in part.Part.Urls)
             _partEditor.Urls.Add(url);
     }
 }
