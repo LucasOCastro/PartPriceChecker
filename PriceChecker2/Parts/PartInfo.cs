@@ -1,4 +1,5 @@
-﻿using PriceChecker2.UrlScraping;
+﻿using PriceChecker2.Saving;
+using PriceChecker2.UrlScraping;
 
 namespace PriceChecker2.Parts;
 
@@ -14,7 +15,7 @@ public class PartInfo : ObservableViewModel
             if (value == Part.IsBuildPart) return;
             Part.IsBuildPart = value;
             OnPropertyChanged(nameof(IsBuildPart));
-            Task.Run(PartDatabase.Instance.SaveChangesAsync);
+            Task.Run(Saver.Instance.SaveAsync);
         }
     }
 
@@ -26,7 +27,7 @@ public class PartInfo : ObservableViewModel
             if (value == Part.BuildPriority) return;
             Part.BuildPriority = value;
             OnPropertyChanged(nameof(BuildPriority));
-            Task.Run(PartDatabase.Instance.SaveChangesAsync);
+            Task.Run(Saver.Instance.SaveAsync);
         }
     }
 
@@ -66,7 +67,7 @@ public class PartInfo : ObservableViewModel
     {
         Part.Name = newName;
         Part.Urls = newUrls.ToArray();
-        await PartDatabase.Instance.SaveChangesAsync();
+        await Task.Run(Saver.Instance.SaveAsync);
 
         //Removes all the data from _data that do not exist in newUrls
         _data.RemoveAll(data => !newUrls.Contains(data.Url));
