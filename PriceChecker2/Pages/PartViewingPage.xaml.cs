@@ -19,7 +19,7 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
     public readonly static BindableProperty PartProperty =
         BindableProperty.Create(nameof(Part), typeof(PartInfo), typeof(PartViewingPage));
 
-    private IEnumerable<UrlScrapedData> SortedUrls => Part.AllUrlData.OrderBy(p => p.Price);
+    private IEnumerable<UrlScrapedData> SortedUrls => Part.AllUrlData.OrderBy(d=> d.IsValid ? d.Price : double.MaxValue);
 
     public PartViewingPage()
     {

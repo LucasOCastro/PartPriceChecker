@@ -61,7 +61,7 @@ public class PartInfo : ObservableViewModel
             var data = await UrlScraper.Instance.ScrapeAsync(uri);
             if (data != null) _data.Add(data);
         }
-        _cheapestData = AllUrlData.MinBy(data => data.Price);
+        _cheapestData = AllUrlData.Where(data => data.IsValid).MinBy(data => data.Price);
         Loading = false;
     }
 
