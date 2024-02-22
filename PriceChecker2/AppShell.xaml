@@ -9,7 +9,7 @@
     <TabBar>
         <Tab Title="Main" Route="main">
             <ShellContent
-                Title="Home"
+                Title="Main Build"
                 ContentTemplate="{DataTemplate local:MainPage}"
                 Route="MainPage" />
         </Tab>

@@ -6,7 +6,8 @@
              xmlns:pages="clr-namespace:PriceChecker2.Pages"
              xmlns:local="clr-namespace:PriceChecker2"
              x:Name="self"
-             x:Class="PriceChecker2.Pages.MainPage">
+             x:Class="PriceChecker2.Pages.MainPage"
+             Title="Main Build">
 
     <StackLayout Orientation="Vertical" x:DataType="pages:MainPage" BindingContext="{x:Reference self}"
         Spacing="25">
@@ -17,7 +18,7 @@
                 <FormattedString>
                     <Span Text="{Binding MoneyString}"/>
                     <Span Text="/"/>
-                    <Span Text="{Binding Build.TotalValidPrice}"/>
+                    <Span Text="{Binding Build.TotalValidPrice, StringFormat='{0:0.##}'}"/>
                     <Span Text=" ("/>
                     <Span Text="{Binding PercentageString}"/>
                     <Span Text=")"/>
