@@ -9,6 +9,8 @@ public class Build: ObservableViewModel
     private readonly ObservableCollection<PartInfo> _buildParts;
     public ReadOnlyObservableCollection<PartInfo> BuildParts { get; }
 
+    public double TotalValidPrice => BuildParts.Where(bp => bp.IsValid).Sum(bp => bp.LowestPrice);
+
     private void Add(PartInfo part)
     {
         if (part.BuildPriority >= 0)
@@ -36,8 +38,6 @@ public class Build: ObservableViewModel
         _buildParts[b].BuildPriority = a;
         _buildParts.Swap(a, b);
     }
-
-    public double TotalValidPrice => BuildParts.Where(bp => bp.IsValid).Sum(bp => bp.LowestPrice);
 
     public Build()
     {
@@ -73,9 +73,17 @@ public class Build: ObservableViewModel
     private void OnPartPropertyChanged(object? sender, EventArgs e)
     {
         if (sender is not PartInfo part) return;
-        if (e is not PropertyChangedEventArgs { PropertyName: nameof(PartInfo.IsBuildPart) }) return;
+        if (e is not PropertyChangedEventArgs args) return;
 
-        if (part.IsBuildPart) Add(part);
-        else Remove(part);
+        switch(args.PropertyName)
+        {
+            case nameof(PartInfo.IsBuildPart):
+                if (part.IsBuildPart) Add(part);
+                else Remove(part);
+                break;
+            case nameof(PartInfo.LowestPrice):
+                OnPropertyChanged(nameof(TotalValidPrice));
+                break;
+        }
     }
 }

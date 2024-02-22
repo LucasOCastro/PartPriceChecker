@@ -75,6 +75,14 @@ public class PartInfo : ObservableViewModel
         _data.RemoveAll(data => !newUrls.Contains(data.Url));
         //Loads all the newUrls that werent in _data before (updates the cheapest inside)
         await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
+
+        OnPropertyChanged(nameof(Name));
+        OnPropertyChanged(nameof(IsValid));
+        OnPropertyChanged(nameof(AllUrlData));
+        OnPropertyChanged(nameof(LowestPrice));
+        OnPropertyChanged(nameof(LowestPriceStoreIconUri));
+        OnPropertyChanged(nameof(LowestPriceDomainName));
+        OnPropertyChanged(nameof(PriceString));
     }
 
     private bool _affordable;

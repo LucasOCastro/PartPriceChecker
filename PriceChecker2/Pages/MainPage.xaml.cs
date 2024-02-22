@@ -45,7 +45,10 @@ public partial class MainPage : ContentPage
         LoadPartInfoAsync();
         Build.PropertyChanged += (s, e) => {
             if (e.PropertyName == nameof(Build.TotalValidPrice))
+            {
+                CalculateAffordables();
                 UpdatePercentage();
+            }
         };
     }
 
