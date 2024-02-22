@@ -40,7 +40,9 @@ public class PartInfo : ObservableViewModel
     private UrlScrapedData? _cheapestData;
     public double LowestPrice => _cheapestData?.Price ?? 0;
     public string LowestPriceStoreIconUri => _cheapestData?.WebsiteIconUri ?? "";
+    public string LowestPriceDomainName => _cheapestData?.DomainName ?? "";
     public string PriceString => IsValid ? _cheapestData.PriceString : "INVALID";
+    
 
     private readonly List<UrlScrapedData> _data = new();
     public PartInfo(Part part)
