@@ -5,16 +5,25 @@ namespace PriceChecker2.UrlScraping;
 public class UrlScraper : Singleton<UrlScraper>
 {
     private readonly HttpClient _client = new();
-    private static readonly char[] anyOf = new char[]{',', '.'};
 
     private static HtmlNode? GetPriceNode(IEnumerable<HtmlNode> nodes, string website) 
         => website switch
         {
             "kabum" => nodes.FirstOrDefault(n => n.GetClasses().Any(c => c == "finalPrice")),
-            "pichau" => nodes.FirstOrDefault(n => n.Id == "valVista"),
+            "pichau" => nodes.FirstOrDefault(n => n.InnerText == "à vista").NextSiblingElement(),
             "amazon" => nodes.FirstOrDefault(n => n.HasClass("a-price-whole")),
             "mercadolivre" => nodes.FirstOrDefault(n => n.HasClass("andes-money-amount__fraction")),
             _ => null,
+        };
+
+    private static string? ProcessPriceString(string priceString, string website)
+        => website switch
+        {
+            "kabum" => priceString.Replace(".", "").Replace(",", "."),
+            "pichau" => priceString.Replace(",", ""),
+            "amazon" => priceString.Replace(".", ""),
+            "mercadolivre" => priceString.Replace(".", ""),
+            _ => null
         };
 
     private static string GetDomainName(Uri uri) => uri.Host.ToLower()
@@ -23,23 +32,6 @@ public class UrlScraper : Singleton<UrlScraper>
         .Replace("br", "")
         .Replace("produto", "")
         .Replace(".", "");
-
-    //Must always use . for decimals and nothing for thousands
-    private static string ProcessPriceString(string price)
-    {
-        price = price.Replace(" ", "")
-            .Replace("r$", "", StringComparison.OrdinalIgnoreCase);
-
-        int firstIndex = price.IndexOfAny(anyOf);
-        if (firstIndex == -1) return price;
-        int lastIndex = price.LastIndexOfAny(anyOf);
-
-        //Ex: 7.999,99 or 7,999.99, must become 7999.99
-        if (firstIndex != lastIndex)
-            price = string.Concat(price.AsSpan(0, firstIndex), price.AsSpan(firstIndex + 1)); //Remove the first symbol
-        //ELSE Ex: 799.99 or 799,99, must become 799.99
-        return price.Replace(',', '.');
-    }
 
     private bool IsIconNode(HtmlNode node)
     {
@@ -57,19 +49,20 @@ public class UrlScraper : Singleton<UrlScraper>
         HtmlDocument doc = new();
         doc.LoadHtml(html);
         string iconUri = doc.DocumentNode.Descendants().FirstOrDefault(IsIconNode)?.Attributes["href"]?.Value ?? "";// "http://www.google.com/s2/favicons?domain=" + url.Host;
+        if (Uri.IsWellFormedUriString(iconUri, UriKind.Relative)) iconUri = "https://" + url.Host + iconUri;
 
-
-        var priceNode = GetPriceNode(doc.DocumentNode.Descendants(), GetDomainName(url));
+        string domain = GetDomainName(url);
+        var priceNode = GetPriceNode(doc.DocumentNode.Descendants(), domain);
         if (priceNode == null) return null;
 
-        string priceString = ProcessPriceString(priceNode.InnerText);
-        double price = double.Parse(priceString.Trim());
+        string priceString = ProcessPriceString(priceNode.InnerText, domain) ?? "0";
+        double price = double.Parse(priceString.Replace(" ", "").Replace("r$", "", StringComparison.OrdinalIgnoreCase).Trim());
 
         return new()
         {
             Url = url.ToString(),
             WebsiteIconUri = iconUri,
-            Price = price
+            Price = price,
         };
     }
 
