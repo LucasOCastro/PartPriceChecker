@@ -11,6 +11,7 @@ public class UrlScraper : Singleton<UrlScraper>
         {
             "kabum" => nodes.FirstOrDefault(n => n.GetClasses().Any(c => c == "finalPrice")),
             "pichau" => nodes.FirstOrDefault(n => n.InnerText == "à vista").NextSiblingElement(),
+            "terabyteshop" => nodes.FirstOrDefault(n => n.Id == "valVista"),
             "amazon" => nodes.FirstOrDefault(n => n.HasClass("a-price-whole")),
             "mercadolivre" => nodes.FirstOrDefault(n => n.HasClass("andes-money-amount__fraction")),
             _ => null,
@@ -19,8 +20,9 @@ public class UrlScraper : Singleton<UrlScraper>
     private static string? ProcessPriceString(string priceString, string website)
         => website switch
         {
-            "kabum" => priceString.Replace(".", "").Replace(",", "."),
+            "kabum" => priceString.Replace(".", "").Replace(',', '.'),
             "pichau" => priceString.Replace(",", ""),
+            "terabyteshop" => priceString.Replace(".", "").Replace(',', '.'),
             "amazon" => priceString.Replace(".", ""),
             "mercadolivre" => priceString.Replace(".", ""),
             _ => null
@@ -33,11 +35,13 @@ public class UrlScraper : Singleton<UrlScraper>
         .Replace("produto", "")
         .Replace(".", "");
 
-    private bool IsIconNode(HtmlNode node)
+    private static HtmlNode? GetIconNode(IEnumerable<HtmlNode> nodes)
     {
-        if (node.Name != "link" || !node.Attributes.Contains("rel")) return false;
-        string rel = node.Attributes["rel"].Value;
-        return rel == "icon" || rel == "shortcut icon";
+        static bool IsIcon(HtmlNode node, params string[] types) 
+            => node.Name == "link" && node.Attributes.Contains("rel") && types.Contains(node.Attributes["rel"].Value);
+        var apple = nodes.FirstOrDefault(n => IsIcon(n, "apple-touch-icon"));
+        if (apple != null) return apple;
+        return nodes.FirstOrDefault(n => IsIcon(n, "icon", "shortcut icon"));
     }
 
     public async Task<UrlScrapedData?> ScrapeAsync(Uri url)
@@ -48,7 +52,7 @@ public class UrlScraper : Singleton<UrlScraper>
         
         HtmlDocument doc = new();
         doc.LoadHtml(html);
-        string iconUri = doc.DocumentNode.Descendants().FirstOrDefault(IsIconNode)?.Attributes["href"]?.Value ?? "";// "http://www.google.com/s2/favicons?domain=" + url.Host;
+        string iconUri = GetIconNode(doc.DocumentNode.Descendants())?.Attributes["href"]?.Value ?? "";
         if (Uri.IsWellFormedUriString(iconUri, UriKind.Relative)) iconUri = "https://" + url.Host + iconUri;
 
         string domain = GetDomainName(url);
