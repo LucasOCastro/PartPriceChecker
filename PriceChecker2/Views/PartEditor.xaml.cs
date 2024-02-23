@@ -7,13 +7,15 @@ public partial class PartEditor : ContentView
 	private string _name = "";
 	public string Name
 	{
-		get => _name.Trim();
+		get => _name;
 		set 
 		{
 			_name = value;
 			OnPropertyChanged(nameof(Name));
 		}
 	}
+
+    public string FormatedName => Name.Trim();
 
 	public ObservableCollection<Observable<string>> Urls { get; } = new();
 

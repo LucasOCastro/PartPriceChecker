@@ -14,7 +14,7 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
 	private async void SaveAsync()
 	{
 		IsBusy = true;
-		await Part.ChangePartData(_partEditor.Name, _partEditor.ValidatedUrls);
+		await Part.ChangePartData(_partEditor.FormatedName, _partEditor.ValidatedUrls);
 		IsBusy = false;
 		Return();
 	}

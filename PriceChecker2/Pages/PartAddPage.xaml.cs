@@ -23,7 +23,7 @@ public partial class PartAddPage : ContentPage
 	{
 		Part part = new()
 		{
-			Name = _partEditor.Name,
+			Name = _partEditor.FormatedName,
 			Urls = _partEditor.ValidatedUrls.ToArray()
 		};
         SaveAsync(part);
