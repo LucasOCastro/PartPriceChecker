@@ -33,7 +33,7 @@ public partial class PartCard : ContentView
 
 	private void Frame_Tapped(object? sender, TappedEventArgs args)
 	{
-		if (!LinkToViewerOnPress) return;
+		if (!LinkToViewerOnPress || Part == null || !Part.IsLoaded) return;
 		ShellNavigator.Instance.NavigateAsync("//viewer", new Dictionary<string, object?> { { nameof(PartViewingPage.Part), Part } });
 	}
 }

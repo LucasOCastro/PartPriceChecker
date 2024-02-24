@@ -13,6 +13,7 @@ public class Saver : Singleton<Saver>
 
     public async Task SaveAsync()
     {
+        //Should I be using "lock"?
         if (_busy)
             await AsyncUtils.WaitWhile(() => _busy);
 

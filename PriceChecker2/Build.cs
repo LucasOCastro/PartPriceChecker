@@ -48,14 +48,10 @@ public class Build: ObservableViewModel
         PartDatabase.Instance.OnPartRegistered += OnPartRegistered;
         PartDatabase.Instance.OnPartUnregistered += OnPartUnregistered;
 
-        LoadPartsAsync();
-    }
-
-    private async Task LoadPartsAsync()
-    {
-        await AsyncUtils.WaitUntil(() => PartDatabase.Instance.AllLoaded);
         foreach (var part in PartDatabase.Instance.Parts)
+        {
             OnPartRegistered(part);
+        }
     }
 
     private void OnPartRegistered(PartInfo part)

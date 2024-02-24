@@ -2,9 +2,15 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:parts="clr-namespace:PriceChecker2.Parts"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Name="self"
-             
              x:Class="PriceChecker2.Views.PartCard">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    
     <Frame BorderColor="Blue" CornerRadius="5" HasShadow="True">
         <Frame.Triggers>
             <DataTrigger TargetType="Frame" x:DataType="parts:PartInfo" Binding="{Binding Affordable}" Value="False">
@@ -20,11 +26,18 @@
         <StackLayout Orientation="Horizontal" x:DataType="parts:PartInfo">
             <VerticalStackLayout HorizontalOptions="StartAndExpand">
                 <Label FontSize="Large" Text="{Binding Name}"/>
-                <HorizontalStackLayout>
+                <ActivityIndicator IsRunning="{Binding IsLoaded,Converter={StaticResource InvertedBoolConverter}}" Color="Blue">
+                    <ActivityIndicator.Triggers>
+                        <DataTrigger TargetType="ActivityIndicator" Binding="{Binding IsLoaded}" Value="True">
+                            <Setter Property="HeightRequest" Value="0"/>
+                        </DataTrigger>
+                    </ActivityIndicator.Triggers>
+                </ActivityIndicator>
+                <HorizontalStackLayout IsVisible="{Binding IsLoaded}">
                     <Label FontSize="Medium" Text="{Binding PriceString}"/>
                     <Image x:Name="icon" WidthRequest="15" Source="{Binding LowestPriceStoreIconUri}"/>
                 </HorizontalStackLayout>
-                <Label Text="{Binding LowestPriceDomainName}" FontSize="Small"/>
+                <Label Text="{Binding LowestPriceDomainName}" FontSize="Small" IsVisible="{Binding IsLoaded}"/>
             </VerticalStackLayout>
             <CheckBox IsChecked="{Binding IsBuildPart, Mode=TwoWay}" VerticalOptions="Center"/>
             <Label Text="Build" FontSize="Medium" VerticalOptions="Center"/>

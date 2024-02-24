@@ -1,5 +1,6 @@
 ﻿using PriceChecker2.Saving;
 using PriceChecker2.UrlScraping;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PriceChecker2.Parts;
 
@@ -33,14 +34,20 @@ public class PartInfo : ObservableViewModel
 
     public IEnumerable<UrlScrapedData> AllUrlData => _data;
 
-    public bool Loading { get; private set; }
+    private bool _isLoaded;
+    public bool IsLoaded
+    {
+        get => _isLoaded;
+        set => SetValue(ref _isLoaded, value);
+    }
 
+    [MemberNotNullWhen(returnValue: true, member: nameof(_cheapestData))]
     public bool IsValid => _cheapestData != null;
 
     private UrlScrapedData? _cheapestData;
-    public double LowestPrice => _cheapestData?.Price ?? 0;
-    public string LowestPriceStoreIconUri => _cheapestData?.WebsiteIconUri ?? "";
-    public string LowestPriceDomainName => _cheapestData?.DomainName ?? "";
+    public double LowestPrice => IsValid ? _cheapestData.Price : 0;
+    public string LowestPriceStoreIconUri => IsValid ? _cheapestData.WebsiteIconUri : "";
+    public string LowestPriceDomainName => IsValid ? _cheapestData.DomainName : "";
     public string PriceString => IsValid ? _cheapestData.PriceString : "INVALID";
     
 
@@ -48,41 +55,44 @@ public class PartInfo : ObservableViewModel
     public PartInfo(Part part)
     {
         Part = part;
-
-        Loading = true;
-        Task.Run(() => LoadDataAsync(part.Urls));
+        LoadDataAsync(part.Urls);
     }
 
-    private async Task LoadDataAsync(IEnumerable<string> urls)
+    private void RefreshCheapestData()
     {
-        foreach (var url in urls)
-        {
-            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) continue;
-            var data = await UrlScraper.Instance.ScrapeAsync(uri);
-            if (data != null) _data.Add(data);
-        }
         _cheapestData = AllUrlData.Where(data => data.IsValid).MinBy(data => data.Price);
-        Loading = false;
-    }
-
-    public async Task ChangePartData(string newName, IEnumerable<string> newUrls)
-    {
-        Part.Name = newName;
-        Part.Urls = newUrls.ToArray();
-        await Task.Run(Saver.Instance.SaveAsync);
-
-        //Removes all the data from _data that do not exist in newUrls
-        _data.RemoveAll(data => !newUrls.Contains(data.Url));
-        //Loads all the newUrls that werent in _data before (updates the cheapest inside)
-        await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
-
-        OnPropertyChanged(nameof(Name));
         OnPropertyChanged(nameof(IsValid));
         OnPropertyChanged(nameof(AllUrlData));
         OnPropertyChanged(nameof(LowestPrice));
         OnPropertyChanged(nameof(LowestPriceStoreIconUri));
         OnPropertyChanged(nameof(LowestPriceDomainName));
         OnPropertyChanged(nameof(PriceString));
+    }
+
+    private async Task LoadDataAsync(IEnumerable<string> urls)
+    {
+        IsLoaded = false;
+        foreach (var url in urls)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) continue;
+            var data = await UrlScraper.Instance.ScrapeAsync(uri);
+            if (data != null) _data.Add(data);
+        }
+        RefreshCheapestData();
+        IsLoaded = true;
+    }
+
+    public async Task ChangePartData(string newName, IEnumerable<string> newUrls)
+    {
+        Part.Name = newName;
+        OnPropertyChanged(nameof(Name));
+        Part.Urls = newUrls.ToArray();
+        Task.Run(Saver.Instance.SaveAsync);
+
+        //Removes all the data from _data that do not exist in newUrls
+        _data.RemoveAll(data => !newUrls.Contains(data.Url));
+        //Loads all the newUrls that werent in _data before (updates the cheapest inside)
+        await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
     }
 
     private bool _affordable;

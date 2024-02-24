@@ -1,5 +1,6 @@
 ﻿using PriceChecker2.Parts;
 using PriceChecker2.Saving;
+using System.Collections.Specialized;
 
 namespace PriceChecker2.Pages;
 
@@ -15,8 +16,7 @@ public partial class MainPage : ContentPage
         {
             _moneyString = value;
             OnPropertyChanged(nameof(MoneyString));
-            CalculateAffordables();
-            UpdatePercentage();
+            RefreshAll();
         }
     }
 
@@ -41,24 +41,16 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+        //Calls RefreshAll
         MoneyString = string.Format("{0:}", Saver.Instance.State.Money);
-        LoadPartInfoAsync();
-        Build.PropertyChanged += (s, e) => {
-            if (e.PropertyName == nameof(Build.TotalValidPrice))
-            {
-                CalculateAffordables();
-                UpdatePercentage();
-            }
-        };
+
+        Build.PropertyChanged += (s, e) => RefreshAll();
     }
 
-    private async Task LoadPartInfoAsync()
+    private void RefreshAll()
     {
-        IsBusy = true;
-        await AsyncUtils.WaitUntil(() => PartDatabase.Instance.AllLoaded);
-        CalculateAffordables();
         UpdatePercentage();
-        IsBusy = false;
+        CalculateAffordables();
     }
 
     private void UpdatePercentage()
@@ -74,12 +66,13 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void CalculateAffordables()
+    private async Task CalculateAffordables()
     {
         if (!TryGetMoneyValue(out double money)) return;
 
         foreach (var part in Build.BuildParts)
         {
+            await AsyncUtils.WaitUntil(() => part.IsLoaded);
             if (!part.IsValid)
             {
                 part.Affordable = false;

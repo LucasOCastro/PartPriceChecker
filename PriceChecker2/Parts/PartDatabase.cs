@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
 using PriceChecker2.Saving;
 using System.Collections.ObjectModel;
-using System.Text.Json;
 
 namespace PriceChecker2.Parts;
 
@@ -13,8 +12,7 @@ public class PartDatabase : Singleton<PartDatabase>
 
     private readonly ObservableCollection<PartInfo> _partInfos;
     public ReadOnlyObservableCollection<PartInfo> Parts { get; }
-    public bool AllLoaded => !Parts.Any(p => p.Loading);
-
+    
     public PartDatabase()
     {
         _partInfos = Saver.Instance.State.Parts.Select(p => new PartInfo(p)).ToObservableCollection();
@@ -27,7 +25,6 @@ public class PartDatabase : Singleton<PartDatabase>
         await Saver.Instance.SaveAsync();
 
         PartInfo partInfo = new(part);
-        await AsyncUtils.WaitWhile(() => partInfo.Loading);
         _partInfos.Add(partInfo);
 
         OnPartRegistered?.Invoke(partInfo);
