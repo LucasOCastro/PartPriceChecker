@@ -13,6 +13,8 @@ public class Build: ObservableViewModel
 
     private void Add(PartInfo part)
     {
+        if (!part.IsLoaded) part.BeginLoading();
+
         if (part.BuildPriority >= 0)
         {
             _buildParts.InsertOrderedBy(part, bp => bp.BuildPriority);

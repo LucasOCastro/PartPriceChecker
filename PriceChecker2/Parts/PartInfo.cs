@@ -55,28 +55,32 @@ public class PartInfo : ObservableViewModel
     public PartInfo(Part part)
     {
         Part = part;
-        LoadDataAsync(part.Urls);
     }
 
     private void RefreshCheapestData()
     {
         _cheapestData = AllUrlData.Where(data => data.IsValid).MinBy(data => data.Price);
         OnPropertyChanged(nameof(IsValid));
-        OnPropertyChanged(nameof(AllUrlData));
         OnPropertyChanged(nameof(LowestPrice));
         OnPropertyChanged(nameof(LowestPriceStoreIconUri));
         OnPropertyChanged(nameof(LowestPriceDomainName));
         OnPropertyChanged(nameof(PriceString));
     }
 
+    public void BeginLoading()
+    {
+        if (IsLoaded) return;
+        Task.Run(() => LoadDataAsync(Part.Urls));
+    }
+
     private async Task LoadDataAsync(IEnumerable<string> urls)
     {
-        IsLoaded = false;
-        foreach (var url in urls)
+        await Task.WhenAll(urls.Select(async url =>
         {
-            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) continue;
-            _data.Add(await UrlScraper.Instance.ScrapeAsync(uri));
-        }
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                _data.Add(await UrlScraper.Instance.ScrapeAsync(uri));
+        }));
+        OnPropertyChanged(nameof(AllUrlData));
         RefreshCheapestData();
         IsLoaded = true;
     }

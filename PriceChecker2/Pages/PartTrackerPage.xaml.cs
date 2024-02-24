@@ -11,15 +11,10 @@ public partial class PartTrackerPage : ContentPage
     public PartTrackerPage()
 	{
 		InitializeComponent();
-        //LoadPartInfoAsync();
+        foreach (var part in PartDatabase.Instance.Parts) 
+            part.BeginLoading();
         _partsCollectionView.ItemsSource = SortedParts;
 
         ((INotifyCollectionChanged)PartDatabase.Instance.Parts).CollectionChanged += (o, e) => OnPropertyChanged(nameof(SortedParts));
     }
-    
-    /*private async Task LoadPartInfoAsync()
-    {
-        _partsCollectionView.ItemsSource = SortedParts;
-        await AsyncUtils.WaitUntil(() => PartDatabase.Instance.AllLoaded);
-    }*/
 }
