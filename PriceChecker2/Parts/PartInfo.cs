@@ -75,8 +75,7 @@ public class PartInfo : ObservableViewModel
         foreach (var url in urls)
         {
             if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)) continue;
-            var data = await UrlScraper.Instance.ScrapeAsync(uri);
-            if (data != null) _data.Add(data);
+            _data.Add(await UrlScraper.Instance.ScrapeAsync(uri));
         }
         RefreshCheapestData();
         IsLoaded = true;

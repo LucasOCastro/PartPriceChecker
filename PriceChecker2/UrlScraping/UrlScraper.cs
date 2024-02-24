@@ -44,7 +44,7 @@ public class UrlScraper : Singleton<UrlScraper>
         return nodes.FirstOrDefault(n => IsIcon(n, "icon", "shortcut icon"));
     }
 
-    public async Task<UrlScrapedData?> ScrapeAsync(Uri url)
+    public async Task<UrlScrapedData> ScrapeAsync(Uri url)
     {
         if (!url.IsWellFormedOriginalString()) return null;
 
@@ -56,11 +56,15 @@ public class UrlScraper : Singleton<UrlScraper>
         if (Uri.IsWellFormedUriString(iconUri, UriKind.Relative)) iconUri = "https://" + url.Host + iconUri;
 
         string domain = GetDomainName(url);
-        var priceNode = GetPriceNode(doc.DocumentNode.Descendants(), domain);
-        if (priceNode == null) return null;
 
-        string priceString = ProcessPriceString(priceNode.InnerText, domain) ?? "0";
-        double price = double.Parse(priceString.Replace(" ", "").Replace("r$", "", StringComparison.OrdinalIgnoreCase).Trim());
+        double price = -1;
+        var priceNode = GetPriceNode(doc.DocumentNode.Descendants(), domain);
+        if (priceNode != null)
+        {
+            string priceString = ProcessPriceString(priceNode.InnerText, domain) ?? "0";
+            priceString = priceString.Replace(" ", "").Replace("r$", "", StringComparison.OrdinalIgnoreCase).Trim();
+            if (double.TryParse(priceString, out double priceValue)) price = priceValue;
+        }
 
         return new()
         {
