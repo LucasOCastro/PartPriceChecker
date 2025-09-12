@@ -3,7 +3,7 @@ using PriceChecker2.Parts;
 
 namespace PriceChecker2.Views;
 
-public partial class PartCard : ContentView
+public partial class PartCard
 {
 	public PartInfo? Part
 	{
@@ -33,7 +33,7 @@ public partial class PartCard : ContentView
 
 	private void Frame_Tapped(object? sender, TappedEventArgs args)
 	{
-		if (!LinkToViewerOnPress || Part == null || !Part.IsLoaded) return;
-		ShellNavigator.Instance.NavigateAsync("//viewer", new Dictionary<string, object?> { { nameof(PartViewingPage.Part), Part } });
+		if (!LinkToViewerOnPress || Part is not { IsLoaded: true }) return;
+		_ = ShellNavigator.Instance.NavigateAsync("//viewer", new Dictionary<string, object?> { { nameof(PartViewingPage.Part), Part } });
 	}
 }

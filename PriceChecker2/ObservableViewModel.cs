@@ -9,9 +9,9 @@ public abstract class ObservableViewModel : INotifyPropertyChanged
 
     protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 
-    protected void SetValue<T>(ref T _property, T value, [CallerMemberName] string name = "")
+    protected void SetValue<T>(ref T property, T value, [CallerMemberName] string name = "")
     {
-        _property = value;
+        property = value;
         OnPropertyChanged(name);
     }
 }

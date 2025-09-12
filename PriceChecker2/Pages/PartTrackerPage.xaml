@@ -7,7 +7,7 @@
              x:Class="PriceChecker2.Pages.PartTrackerPage"
              Title="Part Tracker">
     <StackLayout Orientation="Vertical">
-        <CollectionView x:Name="_partsCollectionView" Margin="10,10,10,10" VerticalOptions="FillAndExpand">
+        <CollectionView x:Name="PartsCollectionView" Margin="10,10,10,10" VerticalOptions="FillAndExpand">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <views:PartCard Part="{Binding .}" Margin="0,5,0,5"/>

@@ -1,10 +1,9 @@
 ﻿using PriceChecker2.Parts;
 using PriceChecker2.Saving;
-using System.Collections.Specialized;
 
 namespace PriceChecker2.Pages;
 
-public partial class MainPage : ContentPage
+public partial class MainPage
 {
     public Build Build { get; } = new();
 
@@ -15,7 +14,7 @@ public partial class MainPage : ContentPage
         set
         {
             _moneyString = value;
-            OnPropertyChanged(nameof(MoneyString));
+            OnPropertyChanged();
             RefreshAll();
         }
     }
@@ -34,7 +33,7 @@ public partial class MainPage : ContentPage
         set
         {
             _percentageString = value;
-            OnPropertyChanged(nameof(PercentageString));
+            OnPropertyChanged();
         }
     }
 
@@ -44,13 +43,13 @@ public partial class MainPage : ContentPage
         //Calls RefreshAll
         MoneyString = string.Format("{0:}", Saver.Instance.State.Money);
 
-        Build.PropertyChanged += (s, e) => RefreshAll();
+        Build.PropertyChanged += (_, _) => RefreshAll();
     }
 
     private void RefreshAll()
     {
         UpdatePercentage();
-        CalculateAffordables();
+        _ = CalculateAffordables();
     }
 
     private void UpdatePercentage()
@@ -104,7 +103,7 @@ public partial class MainPage : ContentPage
         if (TryGetMoneyValue(out double money))
         {
             Saver.Instance.State.Money = money;
-            Task.Run(Saver.Instance.SaveAsync);
+            _ = Saver.Instance.SaveAsync();
         }
     }
 }

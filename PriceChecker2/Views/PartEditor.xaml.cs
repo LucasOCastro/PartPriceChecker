@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 
 namespace PriceChecker2.Views;
 
-public partial class PartEditor : ContentView
+public partial class PartEditor
 {
 	private string _name = "";
 	public string Name
@@ -11,7 +11,7 @@ public partial class PartEditor : ContentView
 		set 
 		{
 			_name = value;
-			OnPropertyChanged(nameof(Name));
+			OnPropertyChanged();
 		}
 	}
 
@@ -29,7 +29,7 @@ public partial class PartEditor : ContentView
 
     public void ClearInputs()
     {
-        _partNameEntry.Text = "";
+        PartNameEntry.Text = "";
         Urls.Clear();
     }
 
@@ -37,7 +37,7 @@ public partial class PartEditor : ContentView
 
     private void RemoveItem_Pressed(object sender, EventArgs e)
     {
-        if (sender is Button button && button.CommandParameter is Observable<string> url)
+        if (sender is Button { CommandParameter: Observable<string> url })
             Urls.Remove(url);
     }
 }

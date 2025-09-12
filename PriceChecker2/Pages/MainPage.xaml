@@ -4,12 +4,11 @@
              xmlns:views="clr-namespace:PriceChecker2.Views"
              xmlns:parts="clr-namespace:PriceChecker2.Parts"
              xmlns:pages="clr-namespace:PriceChecker2.Pages"
-             xmlns:local="clr-namespace:PriceChecker2"
-             x:Name="self"
+             x:Name="Self"
              x:Class="PriceChecker2.Pages.MainPage"
              Title="Main Build">
 
-    <StackLayout Orientation="Vertical" x:DataType="pages:MainPage" BindingContext="{x:Reference self}"
+    <StackLayout Orientation="Vertical" x:DataType="pages:MainPage" BindingContext="{x:Reference Self}"
         Spacing="25">
         
         <Entry HorizontalOptions="Center" Keyboard="Numeric" Placeholder="Money!" Text="{Binding MoneyString}" Completed="MoneyEntry_Completed"/>
@@ -25,7 +24,7 @@
                 </FormattedString>
             </Label.FormattedText>
         </Label>
-        <CollectionView x:Name="_collectionView" Margin="5,10,5,10" VerticalOptions="FillAndExpand" 
+        <CollectionView Margin="5,10,5,10" VerticalOptions="FillAndExpand" 
                         ItemsSource="{Binding Build.BuildParts}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="parts:PartInfo">

@@ -6,7 +6,7 @@
              Title="PartEditingPage">
     <VerticalStackLayout Spacing="10">
         
-        <views:PartEditor x:Name="_partEditor"/>
+        <views:PartEditor x:Name="PartEditor"/>
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
         <Button Text="Cancel" Pressed="BackButton_Pressed"/>
         

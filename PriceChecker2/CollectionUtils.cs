@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace PriceChecker2;
 
 public static class CollectionUtils
 {
-    public static void SetOrAdd<Tkey, TValue>(this Dictionary<Tkey, TValue> dict, Tkey key, TValue value)
+    public static void SetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value) where TKey : notnull
     {
         if (!dict.TryAdd(key, value)) 
             dict[key] = value;
     }
 
-    public static bool TrySet<Tkey, TValue>(this Dictionary<Tkey, TValue> dict, Tkey key, TValue value)
+    public static bool TrySet<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value) where TKey : notnull
     {
         bool contains = dict.ContainsKey(key);
         if (contains) dict[key] = value;

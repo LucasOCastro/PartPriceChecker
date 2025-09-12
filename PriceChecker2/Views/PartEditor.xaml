@@ -2,13 +2,13 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PriceChecker2.Views.PartEditor"
-             x:Name="self">
-    <VerticalStackLayout BindingContext="{x:Reference self}">
-        <Entry x:Name="_partNameEntry" Placeholder="Name" Text="{Binding Name}"/>
+             x:Name="Self">
+    <VerticalStackLayout BindingContext="{x:Reference Self}">
+        <Entry x:Name="PartNameEntry" Placeholder="Name" Text="{Binding Name}"/>
 
         <Label FontSize="Title" HorizontalOptions="Center">URLs</Label>
         <VerticalStackLayout Margin="10,20,10,20">
-            <CollectionView x:Name="_entryColView" ItemsSource="{Binding Urls}">
+            <CollectionView ItemsSource="{Binding Urls}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal">

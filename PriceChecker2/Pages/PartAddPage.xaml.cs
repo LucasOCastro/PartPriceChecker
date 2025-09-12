@@ -2,13 +2,13 @@ using PriceChecker2.Parts;
 
 namespace PriceChecker2.Pages;
 
-public partial class PartAddPage : ContentPage
+public partial class PartAddPage
 {
 	public PartAddPage()
 	{
 		InitializeComponent();
 		BindingContext = this;
-		_partEditor.Urls.Add("");
+		PartEditor.Urls.Add("");
 	}
 
 	private async Task SaveAsync(Part part)
@@ -16,16 +16,16 @@ public partial class PartAddPage : ContentPage
         IsBusy = true;
         await PartDatabase.Instance.RegisterAsync(part);
         IsBusy = false;
-		_partEditor.ClearInputs();
+		PartEditor.ClearInputs();
     }
 
     private void SaveButton_Pressed(object sender, EventArgs e)
 	{
 		Part part = new()
 		{
-			Name = _partEditor.FormatedName,
-			Urls = _partEditor.ValidatedUrls.ToArray()
+			Name = PartEditor.FormatedName,
+			Urls = PartEditor.ValidatedUrls.ToArray()
 		};
-        SaveAsync(part);
+        _ = SaveAsync(part);
 	}
 }

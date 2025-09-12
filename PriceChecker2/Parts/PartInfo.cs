@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PriceChecker2.Parts;
 
-public class PartInfo : ObservableViewModel
+public partial class PartInfo : ObservableViewModel
 {
     public Part Part { get; }
     public string Name => Part.Name;
@@ -16,7 +16,7 @@ public class PartInfo : ObservableViewModel
             if (value == Part.IsBuildPart) return;
             Part.IsBuildPart = value;
             OnPropertyChanged(nameof(IsBuildPart));
-            Task.Run(Saver.Instance.SaveAsync);
+            _ = Saver.Instance.SaveAsync();
         }
     }
 
@@ -28,7 +28,7 @@ public class PartInfo : ObservableViewModel
             if (value == Part.BuildPriority) return;
             Part.BuildPriority = value;
             OnPropertyChanged(nameof(BuildPriority));
-            Task.Run(Saver.Instance.SaveAsync);
+            _ = Saver.Instance.SaveAsync();
         }
     }
 
@@ -70,7 +70,7 @@ public class PartInfo : ObservableViewModel
     public void BeginLoading()
     {
         if (IsLoaded) return;
-        Task.Run(() => LoadDataAsync(Part.Urls));
+        _ = LoadDataAsync(Part.Urls.AsEnumerable());
     }
 
     private async Task LoadDataAsync(IEnumerable<string> urls)
@@ -78,7 +78,11 @@ public class PartInfo : ObservableViewModel
         await Task.WhenAll(urls.Select(async url =>
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
-                _data.Add(await UrlScraper.Instance.ScrapeAsync(uri));
+            {
+                var scraped = await UrlScraper.Instance.ScrapeAsync(uri);
+                if (scraped != null)
+                    _data.Add(scraped);
+            }
         }));
         OnPropertyChanged(nameof(AllUrlData));
         RefreshCheapestData();
@@ -87,15 +91,17 @@ public class PartInfo : ObservableViewModel
 
     public async Task ChangePartData(string newName, IEnumerable<string> newUrls)
     {
+        var newUrlsArray = newUrls.ToArray();
+        
         Part.Name = newName;
         OnPropertyChanged(nameof(Name));
-        Part.Urls = newUrls.ToArray();
-        Task.Run(Saver.Instance.SaveAsync);
+        Part.Urls = newUrlsArray;
+        _ = Saver.Instance.SaveAsync();
 
         //Removes all the data from _data that do not exist in newUrls
-        _data.RemoveAll(data => !newUrls.Contains(data.Url));
-        //Loads all the newUrls that werent in _data before (updates the cheapest inside)
-        await LoadDataAsync(newUrls.Where(newUrl => !_data.Any(data => data.Url == newUrl)));
+        _data.RemoveAll(data => !newUrlsArray.Contains(data.Url));
+        //Loads all the newUrls that weren't in _data before (updates the cheapest inside)
+        await LoadDataAsync(newUrlsArray.Where(newUrl => _data.All(data => data.Url != newUrl)));
     }
 
     private bool _affordable;

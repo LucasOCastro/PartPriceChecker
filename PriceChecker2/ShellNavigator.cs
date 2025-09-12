@@ -5,9 +5,9 @@ internal class ShellNavigator : Singleton<ShellNavigator>
     private readonly List<string> _stack = new();
     private string _current = "";
 
-    private readonly Dictionary<string, Dictionary<string, object>?> _paramsDict = new();
+    private readonly Dictionary<string, Dictionary<string, object?>?> _paramsDict = new();
 
-    private async static Task GoToAsync(string path, Dictionary<string, object>? parameters)
+    private static async Task GoToAsync(string path, Dictionary<string, object?>? parameters)
     {
         if (parameters == null)
             await Shell.Current.GoToAsync(path);
@@ -24,7 +24,7 @@ internal class ShellNavigator : Singleton<ShellNavigator>
 
     public ShellNavigator()
     {
-        Shell.Current.Navigated += (o, e) => _current = e.Current.Location.ToString();
+        Shell.Current.Navigated += (_, e) => _current = e.Current.Location.ToString();
         _current = Shell.Current.CurrentState.Location.ToString();
     }
 

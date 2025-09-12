@@ -8,18 +8,19 @@ public class Saver : Singleton<Saver>
     private static readonly string Dir = Path.Combine(FileSystem.Current.AppDataDirectory, FileName);
 
     public SaveState State { get; } = new();
-
-    private bool _busy;
-
+    
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
     public async Task SaveAsync()
     {
-        //Should I be using "lock"?
-        if (_busy)
-            await AsyncUtils.WaitWhile(() => _busy);
-
-        _busy = true;
-        await File.WriteAllTextAsync(Dir, JsonSerializer.Serialize(State));
-        _busy = false;
+        await _semaphore.WaitAsync();
+        try
+        {
+            await File.WriteAllTextAsync(Dir, JsonSerializer.Serialize(State));
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 
     public Saver()

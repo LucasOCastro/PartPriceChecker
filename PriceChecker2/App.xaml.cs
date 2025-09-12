@@ -2,13 +2,17 @@
 
 namespace PriceChecker2;
 
-public partial class App : Application
+public partial class App
 {
     public App()
     {
         InitializeComponent();
+        CultureInfo.CurrentCulture = new CultureInfo("en-US");
+    }
 
-        CultureInfo.CurrentCulture = new("en-US");
-        MainPage = new AppShell();
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        var page = new AppShell();
+        return new Window(page);
     }
 }

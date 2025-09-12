@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace PriceChecker2;
 
-public class Build: ObservableViewModel
+public partial class Build: ObservableViewModel
 {
     private readonly ObservableCollection<PartInfo> _buildParts;
     public ReadOnlyObservableCollection<PartInfo> BuildParts { get; }
@@ -18,7 +18,6 @@ public class Build: ObservableViewModel
         if (part.BuildPriority >= 0)
         {
             _buildParts.InsertOrderedBy(part, bp => bp.BuildPriority);
-            bool test = _buildParts.DistinctBy(bp => bp.BuildPriority).Count() == _buildParts.Count;
         }
         else
         {
@@ -45,7 +44,7 @@ public class Build: ObservableViewModel
     {
         _buildParts = new();
         BuildParts = new(_buildParts);
-        _buildParts.CollectionChanged += (s,e) => OnPropertyChanged(nameof(TotalValidPrice));
+        _buildParts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(TotalValidPrice));
 
         PartDatabase.Instance.OnPartRegistered += OnPartRegistered;
         PartDatabase.Instance.OnPartUnregistered += OnPartUnregistered;

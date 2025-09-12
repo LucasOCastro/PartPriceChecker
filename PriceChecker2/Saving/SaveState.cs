@@ -1,5 +1,4 @@
 ﻿using PriceChecker2.Parts;
-using System.Text.Json;
 
 namespace PriceChecker2.Saving;
 

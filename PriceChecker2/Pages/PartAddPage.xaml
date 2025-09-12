@@ -5,7 +5,7 @@
              x:Class="PriceChecker2.Pages.PartAddPage"
              Title="Track new part">
     <VerticalStackLayout>
-        <views:PartEditor x:Name="_partEditor"/>
+        <views:PartEditor x:Name="PartEditor"/>
         <Button Text="Save" Pressed="SaveButton_Pressed"/>
     </VerticalStackLayout>
 </ContentPage>

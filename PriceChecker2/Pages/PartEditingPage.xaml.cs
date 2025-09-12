@@ -2,7 +2,7 @@ using PriceChecker2.Parts;
 
 namespace PriceChecker2.Pages;
 
-public partial class PartEditingPage : ContentPage, IQueryAttributable
+public partial class PartEditingPage : IQueryAttributable
 {
 	public PartInfo? Part { get; private set; }
 
@@ -11,21 +11,22 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
 		InitializeComponent();
 	}
 
-	private async void SaveAsync()
+	private async Task SaveAsync()
 	{
+		if (Part is null) return;
+		
 		IsBusy = true;
-		await Part.ChangePartData(_partEditor.FormatedName, _partEditor.ValidatedUrls);
+		await Part.ChangePartData(PartEditor.FormatedName, PartEditor.ValidatedUrls);
 		IsBusy = false;
-		Return();
+		NavigateBack();
 	}
-	private void SaveButton_Pressed(object sender, EventArgs e) => SaveAsync();
+	private void SaveButton_Pressed(object sender, EventArgs e) => _ = SaveAsync();
 
-
-    private void Return() => ShellNavigator.Instance.BackAsync();
-	private void BackButton_Pressed(object? sender, EventArgs e) => Return();
+	
+	private void BackButton_Pressed(object? sender, EventArgs e) => NavigateBack();
     protected override bool OnBackButtonPressed()
     {
-        Return();
+        NavigateBack();
         return true;
     }
 
@@ -34,9 +35,11 @@ public partial class PartEditingPage : ContentPage, IQueryAttributable
         if (!query.TryGetValue(nameof(Part), out var obj) || obj is not PartInfo part) return;
 
         Part = part;
-        _partEditor.Name = part.Name;
-		_partEditor.Urls.Clear();
+        PartEditor.Name = part.Name;
+		PartEditor.Urls.Clear();
         foreach (var url in part.Part.Urls)
-            _partEditor.Urls.Add(url);
+            PartEditor.Urls.Add(url);
     }
+    
+    private static void NavigateBack() => _ = ShellNavigator.Instance.BackAsync();
 }

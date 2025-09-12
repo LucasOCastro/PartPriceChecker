@@ -3,7 +3,7 @@ using PriceChecker2.UrlScraping;
 
 namespace PriceChecker2.Pages;
 
-public partial class PartViewingPage : ContentPage, IQueryAttributable
+public partial class PartViewingPage : IQueryAttributable
 {
     public PartInfo? Part
     {
@@ -13,13 +13,16 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
             SetValue(PartProperty, value);
             BindingContext = Part;
 
-            _urlCollectionView.ItemsSource = SortedUrls;
+            UrlCollectionView.ItemsSource = SortedUrls;
         }
     }
-    public readonly static BindableProperty PartProperty =
+
+    private static readonly BindableProperty PartProperty =
         BindableProperty.Create(nameof(Part), typeof(PartInfo), typeof(PartViewingPage));
 
-    private IEnumerable<UrlScrapedData> SortedUrls => Part.AllUrlData.OrderBy(d=> d.IsValid ? d.Price : double.MaxValue);
+    private IEnumerable<UrlScrapedData> SortedUrls => 
+        Part?.AllUrlData.OrderBy(d=> d.IsValid ? d.Price : double.MaxValue)
+        ?? Enumerable.Empty<UrlScrapedData>();
 
     public PartViewingPage()
     {
@@ -27,12 +30,12 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
     }
 
     private void EditButton_Pressed(object sender, EventArgs e)
-        => ShellNavigator.Instance.NavigateAsync("//editor", new() { { nameof(PartEditingPage.Part), Part } });
+        => _ = ShellNavigator.Instance.NavigateAsync("//editor", new() { { nameof(PartEditingPage.Part), Part } });
 
-    private void BackButton_Pressed(object sender, EventArgs e) => ShellNavigator.Instance.BackAsync();
+    private void BackButton_Pressed(object sender, EventArgs e) => _ = ShellNavigator.Instance.BackAsync();
     protected override bool OnBackButtonPressed()
     {
-        ShellNavigator.Instance.BackAsync();
+        _ = ShellNavigator.Instance.BackAsync();
         return true;
     }
 
@@ -44,6 +47,8 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
 
     private async Task DeleteAsync()
     {
+        if (Part == null) return;
+        
         bool accept = await DisplayAlert("Are you sure?", "This will delete the part permanently.", "Accept", "Cancel");
         if (!accept) return;
 
@@ -52,7 +57,7 @@ public partial class PartViewingPage : ContentPage, IQueryAttributable
         IsBusy = false;
         await ShellNavigator.Instance.BackAsync();
     }
-    private void DeleteButton_Pressed(object sender, EventArgs e) => DeleteAsync();
+    private void DeleteButton_Pressed(object sender, EventArgs e) => _ = DeleteAsync();
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {

@@ -37,14 +37,23 @@ public class UrlScraper : Singleton<UrlScraper>
 
     private static HtmlNode? GetIconNode(IEnumerable<HtmlNode> nodes)
     {
+        foreach (var node in nodes)
+        {
+            // Apple
+            if (IsIcon(node, "apple-touch-icon"))
+                return node;
+            
+            if (IsIcon(node, "icon", "shortcut icon"))
+                return node;
+        }
+        
+        return null;
+
         static bool IsIcon(HtmlNode node, params string[] types) 
             => node.Name == "link" && node.Attributes.Contains("rel") && types.Contains(node.Attributes["rel"].Value);
-        var apple = nodes.FirstOrDefault(n => IsIcon(n, "apple-touch-icon"));
-        if (apple != null) return apple;
-        return nodes.FirstOrDefault(n => IsIcon(n, "icon", "shortcut icon"));
     }
 
-    public async Task<UrlScrapedData> ScrapeAsync(Uri url)
+    public async Task<UrlScrapedData?> ScrapeAsync(Uri url)
     {
         if (!url.IsWellFormedOriginalString()) return null;
 
