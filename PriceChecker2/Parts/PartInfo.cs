@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PriceChecker2.Parts;
 
-public partial class PartInfo : ObservableViewModel
+public partial class PartInfo(Part part) : ObservableViewModel
 {
-    public Part Part { get; }
+    public Part Part { get; } = part;
     public string Name => Part.Name;
     public bool IsBuildPart
     {
@@ -32,7 +32,7 @@ public partial class PartInfo : ObservableViewModel
         }
     }
 
-    public IEnumerable<UrlScrapedData> AllUrlData => _data;
+    public IEnumerable<UrlScrapedData> AllUrlData => _data.AsEnumerable();
 
     private bool _isLoaded;
     public bool IsLoaded
@@ -52,10 +52,6 @@ public partial class PartInfo : ObservableViewModel
     
 
     private readonly List<UrlScrapedData> _data = new();
-    public PartInfo(Part part)
-    {
-        Part = part;
-    }
 
     private void RefreshCheapestData()
     {
@@ -75,18 +71,26 @@ public partial class PartInfo : ObservableViewModel
 
     private async Task LoadDataAsync(IEnumerable<string> urls)
     {
-        await Task.WhenAll(urls.Select(async url =>
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
-            {
-                var scraped = await UrlScraper.Instance.ScrapeAsync(uri);
-                if (scraped != null)
-                    _data.Add(scraped);
-            }
-        }));
-        OnPropertyChanged(nameof(AllUrlData));
-        RefreshCheapestData();
         IsLoaded = true;
+        
+        try
+        {
+            await Task.WhenAll(urls.Select(async url =>
+            {
+                if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                {
+                    var scraped = await UrlScraper.Instance.ScrapeAsync(uri);
+                    if (scraped != null)
+                        _data.Add(scraped);
+                }
+            }));
+            OnPropertyChanged(nameof(AllUrlData));
+            RefreshCheapestData();
+        }
+        catch
+        {
+            IsLoaded = false;
+        }
     }
 
     public async Task ChangePartData(string newName, IEnumerable<string> newUrls)

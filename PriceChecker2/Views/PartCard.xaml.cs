@@ -12,7 +12,7 @@ public partial class PartCard
 		{
 			SetValue(PartProperty, value);
 			BindingContext = Part;
-        }
+		}
 	}
 	public static readonly BindableProperty PartProperty =
 		BindableProperty.Create(nameof(Part), typeof(PartInfo), typeof(PartCard));
@@ -31,9 +31,17 @@ public partial class PartCard
 		InitializeComponent();
 	}
 
+	protected override void OnPropertyChanged(string propertyName = null!)
+	{
+		base.OnPropertyChanged(propertyName);
+
+		if (propertyName == nameof(Part) && Part is { IsLoaded: false })
+			Part.BeginLoading();
+	}
+
 	private void Frame_Tapped(object? sender, TappedEventArgs args)
 	{
-		if (!LinkToViewerOnPress || Part is not { IsLoaded: true }) return;
+		if (!LinkToViewerOnPress || Part == null) return;
 		_ = ShellNavigator.Instance.NavigateAsync("//viewer", new Dictionary<string, object?> { { nameof(PartViewingPage.Part), Part } });
 	}
 }
